@@ -54,7 +54,7 @@ class GradleCompabilityTest {
         def runner = GradleRunner.create()
                 .withGradleVersion(gradleVersion)
                 .withPluginClasspath()
-                .withArguments(*extraExecutionArgs, "--stacktrace")
+                .withArguments(*extraExecutionArgs, "--stacktrace", "--debug")
                 .withProjectDir(projectDir)
 
         then: "the execution should be successfull"

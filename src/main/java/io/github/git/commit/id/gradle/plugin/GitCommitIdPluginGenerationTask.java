@@ -2,7 +2,9 @@ package io.github.git.commit.id.gradle.plugin;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.tasks.*;
 import pl.project13.core.CommitIdGenerationMode;
 import pl.project13.core.GitCommitIdExecutionException;
 import pl.project13.core.git.GitDescribeConfig;
@@ -21,15 +23,31 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
+@CacheableTask
 public class GitCommitIdPluginGenerationTask extends DefaultTask {
   @Inject
   public Project getProject() {
     throw new IllegalStateException();
   }
 
+  private GitCommitIdPluginExtension getExtension() {
+    return getProject().getExtensions().findByType(GitCommitIdPluginExtension.class);
+  }
+
+  @InputDirectory
+  @PathSensitive(PathSensitivity.RELATIVE)
+  public DirectoryProperty getInput() {
+    return getExtension().dotGitDirectory;
+  }
+
+  @OutputFile
+  public RegularFileProperty getOutput() {
+    return getExtension().generateGitPropertiesFilename;
+  }
+
   @TaskAction
   public void runTheTask() {
-    GitCommitIdPluginExtension extension = getProject().getExtensions().findByType(GitCommitIdPluginExtension.class);
+    GitCommitIdPluginExtension extension = getExtension();
     boolean verbose = extension.verbose.get();
     final LogInterface log = new LogInterface() {
       @Override
