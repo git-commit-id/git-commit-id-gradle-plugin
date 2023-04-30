@@ -6,6 +6,7 @@ import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.*;
 import pl.project13.core.CommitIdGenerationMode;
+import pl.project13.core.CommitIdPropertiesOutputFormat;
 import pl.project13.core.GitCommitIdExecutionException;
 import pl.project13.core.git.GitDescribeConfig;
 import pl.project13.core.log.LogInterface;
@@ -201,7 +202,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
       }
 
       @Override
-      public String getPropertiesOutputFormat() {
+      public CommitIdPropertiesOutputFormat getPropertiesOutputFormat() {
         return extension.generateGitPropertiesFormat.get();
       }
 
@@ -223,9 +224,8 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
       }
 
       @Override
-      public String getGenerateGitPropertiesFilename() {
-        // TODO Eh why is this a String and not a File?
-        return extension.generateGitPropertiesFilename.get().getAsFile().toString();
+      public File getGenerateGitPropertiesFile() {
+        return extension.generateGitPropertiesFilename.get().getAsFile();
       }
 
       @Override

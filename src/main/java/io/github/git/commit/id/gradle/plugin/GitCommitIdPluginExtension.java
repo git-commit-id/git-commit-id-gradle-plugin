@@ -6,6 +6,7 @@ import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.*;
+import pl.project13.core.CommitIdPropertiesOutputFormat;
 import pl.project13.core.git.GitDescribeConfig;
 
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class GitCommitIdPluginExtension {
     DirectoryProperty dotGitDirectory;
     Property<GitDescribeConfig> gitDescribeConfig;
     Property<Integer> abbrevLength;
-    Property<String> generateGitPropertiesFormat;
+    Property<CommitIdPropertiesOutputFormat> generateGitPropertiesFormat;
     Property<String> propertyPrefix;
     Property<String> exportDateFormat;
     Property<String> exportDateFormatTimeZone;
@@ -48,7 +49,7 @@ public class GitCommitIdPluginExtension {
                 project.getLayout().getProjectDirectory().dir(".git"));
         gitDescribeConfig = project.getObjects().property(GitDescribeConfig.class).convention(new GitDescribeConfig());
         abbrevLength = project.getObjects().property(Integer.class).convention(7);
-        generateGitPropertiesFormat = project.getObjects().property(String.class).convention("properties");
+        generateGitPropertiesFormat = project.getObjects().property(CommitIdPropertiesOutputFormat.class).convention(CommitIdPropertiesOutputFormat.PROPERTIES);
         propertyPrefix = project.getObjects().property(String.class).convention("git");
         exportDateFormat = project.getObjects().property(String.class).convention("yyyy-MM-dd'T'HH:mm:ssZ");
         exportDateFormatTimeZone = project.getObjects().property(String.class).convention(TimeZone.getDefault().getID());
