@@ -16,7 +16,7 @@ repositories {
 ext {
     pomGroupId = group
     pomVersion = version
-    pomArtifactId = rootProject.name // settings.gradle: 'git-commit-id-gradle-plugin'
+    pomArtifactId = rootProject.name
     pomArtifactName = 'Git Commit Id Gradle Plugin'
 
     jdkCompileVersion = 11
@@ -128,7 +128,7 @@ gradlePlugin {
     // Define the plugin
     plugins {
         gitCommitIdPlugin {
-            id = 'io.github.git-commit-id.git-commit-id-gradle-plugin'
+            id = "${group}.${rootProject.name}"
             implementationClass = 'io.github.git.commit.id.gradle.plugin.GitCommitIdPlugin'
         }
     }
