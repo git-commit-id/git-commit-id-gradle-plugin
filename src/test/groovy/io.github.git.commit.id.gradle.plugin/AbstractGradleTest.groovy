@@ -16,7 +16,7 @@ class AbstractGradleTest {
         new File(projectDir, "build.gradle") << """
             plugins {
                 id('java')
-                id('io.github.git-commit-id.gradle-plugin')
+                id('io.github.git-commit-id.git-commit-id-gradle-plugin')
             }
         """.stripIndent()
 

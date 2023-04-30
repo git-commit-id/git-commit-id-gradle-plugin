@@ -13,6 +13,15 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    pomGroupId = group
+    pomVersion = version
+    pomArtifactId = rootProject.name // settings.gradle: 'git-commit-id-gradle-plugin'
+    pomArtifactName = 'Git Commit Id Gradle Plugin'
+
+    jdkCompileVersion = 11
+}
+
 dependencies {
     implementation gradleApi()
     implementation 'io.github.git-commit-id:git-commit-id-plugin-core:6.0.0-rc.3'
@@ -34,6 +43,14 @@ tasks.withType(Test) {
     }
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.release = ext.properties.jdkCompileVersion
+}
+
+sourceCompatibility = "${jdkCompileVersion}"
+targetCompatibility = "${jdkCompileVersion}"
+
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     archiveClassifier = 'sources'
@@ -42,6 +59,14 @@ task sourcesJar(type: Jar) {
 task javadocJar(type: Jar) {
     from javadoc
     archiveClassifier = 'javadoc'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of("${jdkCompileVersion}"))
+    }
 }
 
 javadoc {
@@ -53,17 +78,49 @@ javadoc {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId = "${pomGroupId}"
+            artifactId = "${pomArtifactId}"
+            version = "${pomVersion}"
+
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
+
+            pom {
+                name = "${pomArtifactName}"
+                url = "https://github.com/git-commit-id/git-commit-id-gradle-plugin"
+                inceptionYear = '2023'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License 3.0'
+                        url = 'http://www.gnu.org/licenses/lgpl-3.0.txt'
+                    }
+                }
+                scm {
+                    url = "scm:git:https://github.com/git-commit-id/git-commit-id-gradle-plugin.git"
+                    connection = 'scm:git:git:github.com:git-commit-id/git-commit-id-gradle-plugin.git'
+                    developerConnection = 'scm:git:ssh://github.com:git-commit-id/git-commit-id-gradle-plugin.git'
+                }
+            }
         }
     }
     repositories {
         mavenLocal()
+        maven {
+            name = "OSSRH"
+            // url = "https://s01.oss.sonatype.org/content/repositories/snapshots/" // this is the repo for snapshots
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/" // this is deploys to the stating repo in nexus
+            credentials {
+                username = System.getenv("OSSRH_USERNAME") // echo %OSSRH_USERNAME% / Create a system environment variable with your sonatype login username
+                password = System.getenv("OSSRH_PASSWORD") // echo %OSSRH_PASSWORD% / Create a system environment variable with your sonatype login password
+            }
+        }
     }
 }
 
 signing {
+    // By default the Signing Plugin uses a Java-based implementation of PGP for signing.
+    // This implementation cannot use the gpg-agent program for managing private keys, though.
+    // If you want to use the gpg-agent, you can change the signatory implementation used by the Signing Plugin:
+    useGpgCmd() // Without this method, gradle will not work with GnuPG keys.
     sign publishing.publications.mavenJava
 }
 
@@ -71,9 +128,10 @@ gradlePlugin {
     // Define the plugin
     plugins {
         gitCommitIdPlugin {
-            id = 'io.github.git-commit-id.gradle-plugin'
+            id = 'io.github.git-commit-id.git-commit-id-gradle-plugin'
             implementationClass = 'io.github.git.commit.id.gradle.plugin.GitCommitIdPlugin'
         }
     }
+    // automatedPublishing = true
 }
 
