@@ -44,7 +44,7 @@ way to manage growing build complexity.
 
 In short the plugin can be configured by adding a block like this to your `build.gradle`:
 ```groovy
-git_commit_id {
+gitCommitId {
     skip.set(false)
 }
 ```

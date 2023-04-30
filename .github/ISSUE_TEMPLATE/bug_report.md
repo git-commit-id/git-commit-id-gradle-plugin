@@ -11,7 +11,7 @@ Please provide a brief summary of the issue and provide a summarised description
 - Please include the **full** configuration of the plugin
 
 ```groovy
-git_commit_id {
+gitCommitId {
     // ...
 }
 ```
