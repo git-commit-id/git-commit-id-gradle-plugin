@@ -3,52 +3,18 @@ package io.github.git.commit.id.gradle.plugin
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.io.CleanupMode
-import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 import java.util.stream.Stream
 
-class GradleCompabilityTest {
-    @TempDir(cleanup = CleanupMode.ON_SUCCESS)
-    File temporaryFolder
-
-    private boolean runGit(projectDir, gitCommands, extraGitArgs=["--no-signoff", "--no-gpg-sign"]) {
-        def command = [
-                "git", "-C", projectDir, *gitCommands
-        ]
-        if (extraGitArgs) {
-            command.addAll(*extraGitArgs)
-        }
-
-        def p = command.execute()
-        def exitCode = p.waitFor()
-        if (exitCode != 0) {
-            def error = new String(p.errorStream.readAllBytes())
-            throw new RuntimeException("Running '$command' failed with '$exitCode'. Error:\n$error")
-        }
-    }
-
+class GradleCompabilityTest extends AbstractGradleTest {
     @ParameterizedTest
     @MethodSource("getGradleTestParams")
     void testPluginSupported(String gradleVersion, List<String> extraExecutionArgs) {
         given: "a dummy project"
         def projectDir = temporaryFolder
-
-        new File(projectDir, "settings.gradle") << ""
-        new File(projectDir, "build.gradle") << """
-            plugins {
-                id('java')
-                id('io.github.git-commit-id.gradle-plugin')
-            }
-        """.stripIndent()
-
-        and: "it's initialized as git project"
-        runGit(projectDir, ["init"], [])
-        runGit(projectDir, ["add", "*"], [])
-        runGit(projectDir, ["commit", "-m", "initialize dummy project"])
 
         when: "running the plugin"
         def runner = GradleRunner.create()
