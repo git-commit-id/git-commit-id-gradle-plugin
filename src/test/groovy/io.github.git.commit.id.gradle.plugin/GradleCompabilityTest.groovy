@@ -27,7 +27,7 @@ class GradleCompabilityTest extends AbstractGradleTest {
         def result = runner.build()
         Assertions.assertEquals(
                 TaskOutcome.SUCCESS,
-                result.task(":gitCommitIdGenerationTask")?.outcome,
+                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
                 result.output
         )
 
@@ -35,7 +35,7 @@ class GradleCompabilityTest extends AbstractGradleTest {
         result = runner.build()
         Assertions.assertEquals(
                 TaskOutcome.UP_TO_DATE,
-                result.task(":gitCommitIdGenerationTask")?.outcome,
+                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
                 result.output
         )
 
@@ -50,14 +50,14 @@ class GradleCompabilityTest extends AbstractGradleTest {
         result = runner.build()
         Assertions.assertEquals(
                 TaskOutcome.SUCCESS,
-                result.task(":gitCommitIdGenerationTask")?.outcome,
+                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
                 result.output
         )
     }
 
     private static Stream<Arguments> getGradleTestParams() {
         return Stream.of(
-                Arguments.of("8.1.1", Arrays.asList("gitCommitIdGenerationTask")),
+                Arguments.of("8.1.1", Arrays.asList("${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")),
                 /*
                 Arguments.of("8.1"),
                 Arguments.of("8.0.2"),

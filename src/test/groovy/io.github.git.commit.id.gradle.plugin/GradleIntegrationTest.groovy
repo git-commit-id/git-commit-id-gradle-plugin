@@ -16,7 +16,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
         new File(projectDir, "build.gradle").withWriterAppend("UTF-8") {
             it.write(
                     """
-                    git_commit_id {
+                    ${GitCommitIdPlugin.GIT_COMMIT_ID_EXTENSION_NAME} {
                         skip.set($shouldSkip)
                     }
                     """.stripIndent()
@@ -26,14 +26,14 @@ class GradleIntegrationTest extends AbstractGradleTest {
         when: "running the plugin"
         def runner = GradleRunner.create()
                 .withPluginClasspath()
-                .withArguments(":gitCommitIdGenerationTask", "--stacktrace", "--debug")
+                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
                 .withProjectDir(projectDir)
 
         then: "the execution should be successfull"
         def result = runner.build()
         Assertions.assertEquals(
                 shouldSkip ? TaskOutcome.SKIPPED : TaskOutcome.SUCCESS,
-                result.task(":gitCommitIdGenerationTask")?.outcome,
+                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
                 result.output
         )
     }
