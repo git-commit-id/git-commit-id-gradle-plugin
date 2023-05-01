@@ -8,8 +8,6 @@ body:
       value: |
         Please follow the instructions below.
         We will close issues that don't provide enough information.
-
-        Provide a brief summary of the issue in the title above
   - type: textarea
     id: describe-the-bug
     attributes:
@@ -63,15 +61,21 @@ body:
     attributes:
       label: Are there any stacktraces or any error messages? (required)
       description: |
-        Include any stack-traces or any error messages.
-        You may want to enable the `verbose` mode of the plugin in your `build.gradle`:
+        Include any stack-traces or any error messages that are included in ``./gradlew .... --stacktrace``.
+        For your own troubleshooting you may want to enable the `verbose` mode of the plugin in your `build.gradle`:
         ```groovy
         gitCommitId {
             verbose.set(true)
         }
         ```
-        **WARNING** You may **NOT** want to paste all the output, since it **MAY** contain information you deem sensitive.
-        Review this **CAREFULLY** before posting your issue!
+      value: |
+        ```bash
+          ./gradlew --stacktrace
+          // ????
+          ```
+          **WARNING** You may **NOT** want to paste all the output that is produced with `verbose` publicly,
+          since it **MAY** contain information you deem sensitive.
+          Review this **CAREFULLY** before posting your issue!
     validations:
       required: true
   - type: textarea
