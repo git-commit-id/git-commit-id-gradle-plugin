@@ -13,16 +13,16 @@ body:
   - type: textarea
     id: describe-the-bug
     attributes:
-      label: Describe the bug
+      label: Describe the bug (required)
       description: Please provide a brief summary of the issue and provide a summarised description in the title above.
     validations:
       required: true
   - type: textarea
     id: plugin-configuration
     attributes:
-      label: Tell us about your plugin configuration
-      description: |
-          Include the **full** configuration of the plugin.
+      label: Tell us about your plugin configuration (required)
+      description: Include the **full** configuration of the plugin.
+      value: |
           ```groovy
              gitCommitId {
                  // ...
@@ -33,29 +33,56 @@ body:
   - type: input
     id: plugin-version
     attributes:
-      label: Plugin version
+      label: Tell us about the Plugin version used (required)
       description: What version of the Plugin are you using?
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: gradle-version
     attributes:
-      label: Gradle version
-      description: What version of Gradle are you running? Simply include the output of ``./gradlew --version``.
+      label: Tell us about the Gradle version used (required)
+      description: What version of Gradle are you running?.
+      value: |
+          ```bash
+          ./gradlew --version
+          // ????
+          ```
     validations:
       required: true
   - type: textarea
     id: steps-to-reproduce
     attributes:
-      label: Steps to Reproduce
+      label: Steps to Reproduce (required)
       description: |
-        - [ ] Please provide all the steps to experience the issue (required)
-        - [ ] Include any stack-traces or any error messages (required)
-        - [ ] If you can provide a (public) project where this issue can be reproduced (optional)
-          - You can use [the template](https://github.com/gradle/gradle-issue-reproducer) with a Gradle GitHub action set up to showcase your problem.
-          - You can also use [Gradle Project Replicator](https://github.com/android/project-replicator) to reproduce the structure of your project.
+        Please provide all the steps to experience the issue.
+        E.g. I run the plugin with ``./gradlew clean build``...
     validations:
       required: true
+  - type: textarea
+    id: steps-to-reproduce-stack-traces
+    attributes:
+      label: Are there any stacktraces or any error messages? (required)
+      description: |
+        Include any stack-traces or any error messages.
+        You may want to enable the `verbose` mode of the plugin in your `build.gradle`:
+        ```groovy
+        gitCommitId {
+            verbose.set(true)
+        }
+        ```
+        **WARNING** You may **NOT** want to paste all the output, since it **MAY** contain information you deem sensitive.
+        Review this **CAREFULLY** before posting your issue!
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce-public-project
+    attributes:
+      label: Is there a (public) project where this issue can be reproduced? (optional)
+      description: |
+        - You can use [the template](https://github.com/gradle/gradle-issue-reproducer) with a Gradle GitHub action set up to showcase your problem.
+        - You can also use [Gradle Project Replicator](https://github.com/android/project-replicator) to reproduce the structure of your project.
+    validations:
+      required: false
   - type: textarea
     id: environment
     attributes:
