@@ -1,20 +1,22 @@
+/*
+ * This file is part of git-commit-id-gradle-plugin.
+ *
+ * git-commit-id-gradle-plugin is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * git-commit-id-gradle-plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with git-commit-id-gradle-plugin.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package io.github.git.commit.id.gradle.plugin;
 
-import org.gradle.api.DefaultTask;
-import org.gradle.api.Project;
-import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.tasks.*;
-import pl.project13.core.CommitIdGenerationMode;
-import pl.project13.core.CommitIdPropertiesOutputFormat;
-import pl.project13.core.GitCommitIdExecutionException;
-import pl.project13.core.git.GitDescribeConfig;
-import pl.project13.core.log.LogInterface;
-import pl.project13.core.util.BuildFileChangeListener;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +25,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
+import org.gradle.api.tasks.TaskAction;
+import pl.project13.core.CommitIdGenerationMode;
+import pl.project13.core.CommitIdPropertiesOutputFormat;
+import pl.project13.core.GitCommitIdExecutionException;
+import pl.project13.core.git.GitDescribeConfig;
+import pl.project13.core.log.LogInterface;
+import pl.project13.core.util.BuildFileChangeListener;
+
 
 @CacheableTask
 public class GitCommitIdPluginGenerationTask extends DefaultTask {

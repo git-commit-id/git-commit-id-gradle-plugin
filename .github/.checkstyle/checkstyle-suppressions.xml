@@ -5,6 +5,7 @@
      "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
+<!--
   <suppress checks="JavadocStyle" files=".*\.java" />
   <suppress checks="SummaryJavadoc" files=".*\.java" />
   <suppress checks="JavadocParagraph" files=".*\.java" />
@@ -22,5 +23,5 @@
   <suppress checks="CustomImportOrder" files=".*\.java" />
   <suppress checks="OverloadMethodsDeclarationOrder" files=".*\.java" />
   <suppress checks="VariableDeclarationUsageDistance" files=".*\.java" />
-
+-->
 </suppressions>
