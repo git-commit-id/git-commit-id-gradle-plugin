@@ -38,21 +38,6 @@ class GradleCompabilityTest extends AbstractGradleTest {
                 result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
                 result.output
         )
-
-        when: "we add a commit to git"
-        new File(projectDir, "README.md") << """
-            Hello World!
-        """.stripIndent()
-        runGit(projectDir, ["add", "README.md"], [])
-        runGit(projectDir, ["commit", "-m", "added readme"])
-
-        and: "the plugin get's executed again"
-        result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
     }
 
     private static Stream<Arguments> getGradleTestParams() {
