@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'idea'
+    id 'checkstyle'
 }
 
 group = 'io.github.git-commit-id'
@@ -73,6 +74,18 @@ javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
+}
+
+checkstyle {
+    toolVersion = '10.10.0'
+    configProperties = [
+            "samedir": "${rootProject.file('.github/.checkstyle')}",
+            "org.checkstyle.google.suppressionfilter.config": "${rootProject.file('.github/.checkstyle/checkstyle-suppressions.xml')}",
+    ]
+    configFile = rootProject.file('.github/.checkstyle/google_checks_checkstyle_10.10.0.xml')
+    maxErrors = 0
+    maxWarnings = 0
+    showViolations = false
 }
 
 publishing {
