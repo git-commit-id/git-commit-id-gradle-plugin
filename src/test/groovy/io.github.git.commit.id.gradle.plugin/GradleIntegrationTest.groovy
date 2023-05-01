@@ -1,5 +1,6 @@
 package io.github.git.commit.id.gradle.plugin
 
+import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions
@@ -8,6 +9,14 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class GradleIntegrationTest extends AbstractGradleTest {
+    private void assertTaskOutcome(BuildResult result, TaskOutcome expectedTaskOutcome) {
+        Assertions.assertEquals(
+                expectedTaskOutcome,
+                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
+                result.output
+        )
+    }
+
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     void pluginCanBeSkippedByConfiguration(boolean shouldSkip) {
@@ -32,11 +41,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         then: "the execution should be successfull"
         def result = runner.build()
-        Assertions.assertEquals(
-                shouldSkip ? TaskOutcome.SKIPPED : TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, shouldSkip ? TaskOutcome.SKIPPED : TaskOutcome.SUCCESS)
     }
 
     @Test
@@ -52,19 +57,11 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         then: "the execution should be successfull"
         def result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, TaskOutcome.SUCCESS)
 
         and: "running it again should yield an up-to-date"
         result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.UP_TO_DATE,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, TaskOutcome.UP_TO_DATE)
 
         when: "we add a commit to git"
         new File(projectDir, "README.md") << """
@@ -75,11 +72,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         and: "the plugin get's executed again"
         result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, TaskOutcome.SUCCESS)
     }
 
     @Test
@@ -110,11 +103,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         then: "the execution should be successfull"
         def result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, TaskOutcome.SUCCESS)
 
         and: "output exists"
         def expectedGenerated = projectDir.toPath().resolve("build/git.properties").toFile()
@@ -127,11 +116,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         when: "the plugin get's executed again"
         result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.FROM_CACHE,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
-                result.output
-        )
+        assertTaskOutcome(result, TaskOutcome.FROM_CACHE)
         Assertions.assertTrue(expectedGenerated.exists(), "Was not regenerated $expectedGenerated")
 
         and:
