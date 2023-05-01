@@ -9,6 +9,13 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class GradleIntegrationTest extends AbstractGradleTest {
+    private GradleRunner createRunner(projectDir) {
+        GradleRunner.create()
+                .withPluginClasspath()
+                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
+                .withProjectDir(projectDir)
+    }
+
     private void assertTaskOutcome(BuildResult result, TaskOutcome expectedTaskOutcome) {
         Assertions.assertEquals(
                 expectedTaskOutcome,
@@ -34,10 +41,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
         }
 
         when: "running the plugin"
-        def runner = GradleRunner.create()
-                .withPluginClasspath()
-                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
-                .withProjectDir(projectDir)
+        def runner = createRunner(projectDir)
 
         then: "the execution should be successfull"
         def result = runner.build()
@@ -50,10 +54,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
         def projectDir = temporaryFolder
 
         when: "running the plugin"
-        def runner = GradleRunner.create()
-                .withPluginClasspath()
-                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
-                .withProjectDir(projectDir)
+        def runner = createRunner(projectDir)
 
         then: "the execution should be successfull"
         def result = runner.build()
@@ -96,10 +97,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
         }
 
         when: "running the plugin"
-        def runner = GradleRunner.create()
-                .withPluginClasspath()
-                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
-                .withProjectDir(projectDir)
+        def runner = createRunner(projectDir)
 
         then: "the execution should be successfull"
         def result = runner.build()
