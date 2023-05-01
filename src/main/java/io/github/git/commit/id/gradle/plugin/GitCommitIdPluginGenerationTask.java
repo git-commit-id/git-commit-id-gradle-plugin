@@ -46,29 +46,65 @@ import pl.project13.core.git.GitDescribeConfig;
 import pl.project13.core.log.LogInterface;
 import pl.project13.core.util.BuildFileChangeListener;
 
-
+/**
+ * The task that generates the "git" information.
+ * If you wish to change any configuration you may refer to the
+ * {@link GitCommitIdPluginExtension} class in the API documentation.
+ * If you are interested in the plugin itself you may refer to {@link GitCommitIdPlugin}.
+ */
 @CacheableTask
 public class GitCommitIdPluginGenerationTask extends DefaultTask {
+    /**
+     * The project for which the task is running, or for which we want to generate
+     * "git" information.
+     *
+     * @return The project
+     */
     @Inject
     public Project getProject() {
         throw new IllegalStateException();
     }
 
+    /**
+     * The {@link GitCommitIdPluginExtension} that serves as configuration of the plugin / task.
+     *
+     * @return The {@link GitCommitIdPluginExtension}
+     */
     private GitCommitIdPluginExtension getExtension() {
         return getProject().getExtensions().findByType(GitCommitIdPluginExtension.class);
     }
 
+    /**
+     * Since we are generating "git" information this task needs to specify the git-directory
+     * as input. The input can then be used by gradle to determine if the task is "up-to-date"
+     * or needs to re-run. As general expectation we can assume that the task should be "up-to-date"
+     * when there are no changes in the underlying git directory.
+     *
+     * @return The git directory that shall be used to generate the "git" information
+     */
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     public DirectoryProperty getInput() {
         return getExtension().dotGitDirectory;
     }
 
+    /**
+     * The plugin allows to generate a "properties" file. For gradle's "up-to-date" checks
+     * we need to specify it as output. The file is optional, but gradle can handle that.
+     *
+     * @return
+     *     The optional "properties" file that can be used to store the generated
+     *     properties in a file.
+     */
     @OutputFile
     public RegularFileProperty getOutput() {
         return getExtension().generateGitPropertiesFilename;
     }
 
+    /**
+     * The task action that ties it all together and runs the underlying logic of gathering the data
+     * and exporting it to the relevant locations.
+     */
     @TaskAction
     public void runTheTask() {
         GitCommitIdPluginExtension extension = getExtension();
