@@ -53,7 +53,8 @@ body:
           label: Steps to Reproduce (required)
           description: |
               Please provide all the steps to experience the issue.
-              E.g. I run the plugin with ``./gradlew clean build``...
+          value: |
+              I run the plugin with ``./gradlew clean build``...
       validations:
           required: true
     - type: textarea
@@ -95,6 +96,7 @@ body:
           description: |
               Include as many relevant details about the environment you experienced the bug in.
               Are you running inside Windows Terminal, Powershell, Git Bash, /bin/bash, ...?
+              On what Operating System you experience the bug (on Linux run ``lsb_release -a`` or ``cat /etc/*release*``)?
       validations:
           required: false
     - type: textarea
