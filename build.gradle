@@ -1,25 +1,33 @@
 plugins {
     id 'groovy'
     id 'java-gradle-plugin'
-    id 'maven-publish'
     id 'signing'
     id 'idea'
     id 'checkstyle'
+    id("com.gradle.plugin-publish") version "1.2.0"
 }
 
-group = 'io.github.git-commit-id'
-version = '0.0.1-alpha'
+group = "io.github.git-commit-id"
+
+project.gradle.taskGraph.whenReady {
+    def baseVersion = "0.0.1-alpha"
+    if (gradle.taskGraph.hasTask(":publishAllPublicationsToLocalPluginRepositoryRepository")) {
+        version = "${baseVersion}-SNAPSHOT"
+
+        // Skip signing when we publish to local
+        tasks.withType(Sign) {
+            enabled = false
+        }
+    } else {
+        version = baseVersion
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 ext {
-    pomGroupId = group
-    pomVersion = version
-    pomArtifactId = rootProject.name
-    pomArtifactName = 'Git Commit Id Gradle Plugin'
-
     jdkCompileVersion = 11
 }
 
@@ -71,7 +79,7 @@ java {
 }
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
@@ -88,63 +96,36 @@ checkstyle {
     showViolations = false
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = "${pomGroupId}"
-            artifactId = "${pomArtifactId}"
-            version = "${pomVersion}"
-
-            from components.java
-
-            pom {
-                name = "${pomArtifactName}"
-                url = "https://github.com/git-commit-id/git-commit-id-gradle-plugin"
-                inceptionYear = '2023'
-                licenses {
-                    license {
-                        name = 'GNU Lesser General Public License 3.0'
-                        url = 'http://www.gnu.org/licenses/lgpl-3.0.txt'
-                    }
-                }
-                scm {
-                    url = "scm:git:https://github.com/git-commit-id/git-commit-id-gradle-plugin.git"
-                    connection = 'scm:git:git:github.com:git-commit-id/git-commit-id-gradle-plugin.git'
-                    developerConnection = 'scm:git:ssh://github.com:git-commit-id/git-commit-id-gradle-plugin.git'
-                }
-            }
-        }
-    }
-    repositories {
-        mavenLocal()
-        maven {
-            name = "OSSRH"
-            // url = "https://s01.oss.sonatype.org/content/repositories/snapshots/" // this is the repo for snapshots
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/" // this is deploys to the stating repo in nexus
-            credentials {
-                username = System.getenv("OSSRH_USERNAME") // echo %OSSRH_USERNAME% / Create a system environment variable with your sonatype login username
-                password = System.getenv("OSSRH_PASSWORD") // echo %OSSRH_PASSWORD% / Create a system environment variable with your sonatype login password
-            }
-        }
-    }
-}
-
 signing {
     // By default the Signing Plugin uses a Java-based implementation of PGP for signing.
     // This implementation cannot use the gpg-agent program for managing private keys, though.
     // If you want to use the gpg-agent, you can change the signatory implementation used by the Signing Plugin:
     useGpgCmd() // Without this method, gradle will not work with GnuPG keys.
-    sign publishing.publications.mavenJava
+}
+
+publishing {
+    repositories {
+        maven {
+            // ./gradlew publishAllPublicationsToLocalPluginRepositoryRepository
+            name = "localPluginRepository"
+            url = "${project.gradle.gradleUserHomeDir}/.local-plugin-repository"
+        }
+    }
 }
 
 gradlePlugin {
-    // Define the plugin
+    website = "https://github.com/git-commit-id/${rootProject.name}"
+    vcsUrl = "https://github.com/git-commit-id/${rootProject.name}.git"
+
     plugins {
         gitCommitIdPlugin {
             id = "${group}.${rootProject.name}"
+            displayName = "Plugin to make basic git repository information available in the gradle world."
+            description = "A plugin that helps you to extract valuable information from your git repository that can be included in your final artifact for reproducability."
+            tags.addAll("git", "gradle-plugin", "versioning")
             implementationClass = 'io.github.git.commit.id.gradle.plugin.GitCommitIdPlugin'
         }
     }
-    // automatedPublishing = true
+    automatedPublishing = true
 }
 
