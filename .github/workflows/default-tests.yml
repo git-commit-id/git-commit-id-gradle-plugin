@@ -111,8 +111,7 @@ jobs:
           '5.2.1',
           '5.2',
           '5.1',
-          # Likely Doesn't support conventions: https://docs.gradle.org/5.1/release-notes.html#specify-a-convention-for-a-property
-          '5.0',
+          # '5.0', # Doesn't support conventions: https://docs.gradle.org/5.1/release-notes.html#specify-a-convention-for-a-property
         ]
 
     steps:
