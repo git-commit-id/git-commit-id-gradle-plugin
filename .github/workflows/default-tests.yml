@@ -118,9 +118,9 @@ jobs:
           '5.4',
           '5.3.1',
           '5.3',
-          '5.2.1',
-          '5.2',
-          '5.1',
+          # '5.2.1', # Extension injection is only supported for 5.3 and onwards https://github.com/gradle/gradle/issues/24947
+          # '5.2', # Extension injection is only supported for 5.3 and onwards https://github.com/gradle/gradle/issues/24947
+          # '5.1', # Extension injection is only supported for 5.3 and onwards https://github.com/gradle/gradle/issues/24947
           # '5.0', # Doesn't support conventions: https://docs.gradle.org/5.1/release-notes.html#specify-a-convention-for-a-property
         ]
 
