@@ -65,8 +65,9 @@ jobs:
           java-package: jdk
       - name: Install a test version with Gradle
         run: ./gradlew clean publishAllPublicationsToLocalPluginRepositoryRepository
-      - run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin)" >> $GITHUB_ENV
-      - name: "Checkout git-commit-id-gradle-debugging to run actual gradle integration tests"
+      - name: Setup TEMP_DIR
+        run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin/git-commit-id-gradle-debugging)" >> $GITHUB_ENV
+      - name: Checkout git-commit-id-gradle-debugging to run actual gradle integration tests
         uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -74,16 +75,17 @@ jobs:
           path: ${{ env.TEMP_DIR}}
       - name: Setup Gradle ${{ matrix.gradle_version }}
         run: |
-            cd ${{ env.TEMP_DIR}}/git-commit-id-gradle-debugging
+            cd ${{ env.TEMP_DIR}}
             ./gradle wrapper --gradle-version ${{ matrix.gradle_version }} --distribution-type bin
       - name: Verify Setup of Gradle ${{ matrix.gradle_version }}
         run: |
-          cd ${{ env.TEMP_DIR}}/git-commit-id-gradle-debugging
+          cd ${{ env.TEMP_DIR}}
           ./gradlew -version
       - name: Run the local testversion with Gradle
         run: |
-          cd ${{ env.TEMP_DIR}}/git-commit-id-gradle-debugging
+          cd ${{ env.TEMP_DIR}}
           ./gradlew clean build --rerun-tasks
       - name: Validate if the testversion has produced the desired output
-        run: /bin/bash -c '[[ -f ${{ env.TEMP_DIR}}/git-commit-id-gradle-debugging/build/git.properties ]] && cat ${{ env.TEMP_DIR}}/git-commit-id-gradle-debugging/build/git.properties || exit 1;'
-      - run: rm -rf ${{ env.TEMP_DIR}}
+        run: /bin/bash -c '[[ -f ${{ env.TEMP_DIR}}/build/git.properties ]] && cat ${{ env.TEMP_DIR}}/build/git.properties || exit 1;'
+      - name: Cleanup TEMP_DIR
+        run: rm -rf ${{ env.TEMP_DIR}}
