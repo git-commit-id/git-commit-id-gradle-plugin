@@ -67,18 +67,18 @@ jobs:
         with:
           submodules: recursive
           repository: git-commit-id/git-commit-id-gradle-debugging
-          path: $GITHUB_WORKSPACE/git-commit-id-gradle-debugging
+          path: /home/runner/work
       - name: Setup Gradle ${{ matrix.gradle_version }}
         run: |
-            cd $GITHUB_WORKSPACE/git-commit-id-gradle-debugging
+            cd /home/runner/work/git-commit-id-gradle-debugging
             ./gradle wrapper --gradle-version ${{ matrix.gradle_version }} --distribution-type bin
       - name: Verify Setup of Gradle ${{ matrix.gradle_version }}
         run: |
-          cd $GITHUB_WORKSPACE/git-commit-id-gradle-debugging
+          cd /home/runner/work/git-commit-id-gradle-debugging
           ./gradlew -version
       - name: Run the local testversion with Gradle
         run: |
-          cd $GITHUB_WORKSPACE/git-commit-id-gradle-debugging
+          cd /home/runner/work/git-commit-id-gradle-debugging
           ./gradlew clean build --rerun-tasks
       - name: Validate if the testversion has produced the desired output
         run: /bin/bash -c '[[ -f $GITHUB_WORKSPACE/git-commit-id-gradle-debugging/build/git.properties ]] && cat $GITHUB_WORKSPACE/git-commit-id-gradle-debugging/build/git.properties || exit 1;'
