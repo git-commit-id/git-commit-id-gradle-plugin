@@ -73,6 +73,11 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             .findByType(GitCommitIdPluginOutputSettingsExtension.class);
     }
 
+    private GitCommitIdPluginGitSettingsExtension getGitCommitIdPluginGitSettingsExtension() {
+        return ((ExtensionAware) getGitCommitIdPluginExtension()).getExtensions()
+            .findByType(GitCommitIdPluginGitSettingsExtension.class);
+    }
+
     /**
      * Since we are generating "git" information this task needs to specify the git-directory
      * as input. The input can then be used by gradle to determine if the task is "up-to-date"
@@ -84,7 +89,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     public DirectoryProperty getInput() {
-        return getGitCommitIdPluginExtension().getDotGitDirectory();
+        return getGitCommitIdPluginGitSettingsExtension().getDotGitDirectory();
     }
 
     /**
@@ -200,22 +205,22 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean useNativeGit() {
-                return extension.getUseNativeGit().get();
+                return getGitCommitIdPluginGitSettingsExtension().getUseNativeGit().get();
             }
 
             @Override
             public long getNativeGitTimeoutInMs() {
-                return extension.getNativeGitTimeoutInMs().get();
+                return getGitCommitIdPluginGitSettingsExtension().getNativeGitTimeoutInMs().get();
             }
 
             @Override
             public int getAbbrevLength() {
-                return extension.getAbbrevLength().get();
+                return getGitCommitIdPluginGitSettingsExtension().getAbbrevLength().get();
             }
 
             @Override
             public GitDescribeConfig getGitDescribe() {
-                return extension.getGitDescribeConfig().get();
+                return getGitCommitIdPluginGitSettingsExtension().getGitDescribeConfig().get();
             }
 
             @Override
@@ -230,17 +235,18 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean isOffline() {
-                return extension.getOffline().get();
+                return getGitCommitIdPluginGitSettingsExtension().getOffline().get();
             }
 
             @Override
             public String getEvaluateOnCommit() {
-                return extension.getEvaluateOnCommit().get();
+                return getGitCommitIdPluginGitSettingsExtension().getEvaluateOnCommit().get();
             }
 
             @Override
             public File getDotGitDirectory() {
-                return extension.getDotGitDirectory().get().getAsFile();
+                return getGitCommitIdPluginGitSettingsExtension()
+                    .getDotGitDirectory().get().getAsFile();
             }
 
             @Override

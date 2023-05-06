@@ -70,49 +70,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract Property<Boolean> getVerbose();
 
     /**
-     * The information on what git revision your project is built with must come from the
-     * git itself.
-     * If you'd like to tell the plugin where your {@code .git} directory is, use this setting,
-     * by default this plugin assumes {@code getProjectDirectory()/.git}.
-     */
-    // @InputDirectory
-    public abstract DirectoryProperty getDotGitDirectory();
-
-    /**
-     * The following {@code gitDescribeConfig} below is optional and can be leveraged as a
-     * really powerful versioning helper. If you are not familiar with
-     * <a href="https://git-scm.com/docs/git-describe">git-describe</a>
-     * it is highly recommended to go through this part of the documentation. More advanced
-     * users can most likely skip the explanations in this section, as it just explains the
-     * same options that git provides.
-     * In summary {@code gitDescribe} can translate your current branch
-     * into a human-readable name like {@code v1.0.4-14-g2414721}
-     * that represents all relevant version information.
-     *
-     * <p>Refer to {@link GitDescribeConfig} for options that can be passed towards git-describe.
-     * The result of this configuration is exposed as
-     * {@link #getPropertyPrefix()}{@code .commit.id.describe}.
-     */
-    public abstract Property<GitDescribeConfig> getGitDescribeConfig();
-
-    /**
-     * By default git uses 40 character long SHA-1 hashes to represent commit hashes.
-     * In most cases it is however already sufficient to display only a few characters
-     * at the front of this commit hash to get an unique enough identifier of the commit hash.
-     * By default git chooses the first 7 characters of the hash, which is then called abbreviation.
-     *
-     * <p>The plugin therefore sets the abbreviation to {@code 7} by default.
-     * Please note that larger projects might want to increase this to eight to ten characters
-     * to avoid a collision (e.g. an abbreviated hash would not be unique anymore and could
-     * point to two different commits in the database).
-     *
-     * <p>Refer to <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection">Git Tools - Revision Selection</a>
-     * for more details.
-     *
-     */
-    public abstract Property<Integer> getAbbrevLength();
-
-    /**
      * This configuration allows you to configure the "prefix" of the generated properties and thus
      * will be used as the "namespace" prefix for all exposed/generated properties.
      *
@@ -147,40 +104,6 @@ public abstract class GitCommitIdPluginExtension {
      * abbreviation are often used for multiple time zones.
      */
     public abstract Property<String> getExportDateFormatTimeZone();
-
-    /**
-     * Control whether the plugin should fail when a .git directory cannot be found.
-     * The directory can be configured by {@link #getDotGitDirectory()}.
-     * When set to {@code false} and no {@code .git} directory is found the plugin
-     * will skip execution.
-     *
-     * <p>Defaults to {@code true}, so a missing {@code .git} directory may cause a build failure.
-     */
-    public abstract Property<Boolean> getFailOnNoGitDirectory();
-
-    /**
-     * Control whether the plugin should fail the build if it's unable to
-     * obtain enough data for a complete run (e.g. gather all requested information).
-     *
-     * <p>Defaults to {@code true}, so missing data may cause a build failure.
-     */
-    public abstract Property<Boolean> getFailOnUnableToExtractRepoInfo();
-
-    /**
-     * This plugin ships with custom {@code jgit} implementation that is being used to obtain all
-     * relevant information. If set to {@code true} this plugin will use the
-     * native {@code git} binary instead of the custom {@code jgit} implementation.
-     *
-     * <p>Although this should usually give your build some performance boost, it may randomly
-     * break if you upgrade your git version if it decides to print information in a different
-     * format suddenly. As rule of thumb, keep using the default {@code jgit} implementation (keep
-     * this {@code false}) until you notice performance problems within your build (usually when you
-     * have *hundreds* of gradle projects).
-     *
-     * <p>To not get your build stuck forever, this plugin also has an option to configure a
-     * maximum timeout to wait for any native command. Refer to {@link #getNativeGitTimeoutInMs()}.
-     */
-    public abstract Property<Boolean> getUseNativeGit();
 
     /**
      * Allows to configure to skip the execution of the {@link GitCommitIdPluginGenerationTask}
@@ -232,35 +155,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract ListProperty<String> getIncludeOnlyProperties();
 
     /**
-     * Allow to tell the plugin what commit should be used as reference to
-     * generate the properties from.
-     *
-     * <p>In general this property can be set to something generic like {@code HEAD^1} or point to a
-     * branch or tag-name. To support any kind or use-case this configuration can also be set
-     * to an entire commit-hash or it's abbreviated version.
-     *
-     * <p>A use-case for this feature can be found in
-     * <a href="https://github.com/git-commit-id/git-commit-id-maven-plugin/issues/338">here</a>.
-     *
-     * <p>Please note that for security purposes not all references might
-     * be allowed as configuration. If you have a specific use-case that is currently
-     * not white listed feel free to file an issue.
-     */
-    public abstract Property<String> getEvaluateOnCommit();
-
-    /**
-     * Allow to specify a timeout (in milliseconds) for fetching information with the native
-     * Git executable. This option might come in handy in cases where fetching information
-     * about the repository with the native Git executable does not terminate.
-     *
-     * <p>Note: This option will only be taken into consideration when using the native git
-     * executable ({@link #getUseNativeGit()} is set to {@code true}).
-     *
-     * <p>By default this timeout is set to 30000 (30 seconds).
-     */
-    public abstract Property<Long> getNativeGitTimeoutInMs();
-
-    /**
      * When set to {@code true} this plugin will try to use the branch name from build environment.
      * Set to {@code false} to use JGit/GIT to get current branch name which can be useful
      * when using the JGitflow maven plugin. I'm not sure if there are similar plugins for gradle
@@ -271,29 +165,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract Property<Boolean> getUseBranchNameFromBuildEnvironment();
 
     /**
-     * The plugin can generate certain properties that represents the count of commits
-     * that your local branch is ahead or behind in perspective to the remote branch.
-     *
-     * <p>When your branch is "ahead" it means your local branch has committed changes that are not
-     * pushed yet to the remote branch.
-     * When your branch is "behind" it means there are commits in the remote branch that are not yet
-     * integrated into your local branch.
-     *
-     * <p>This configuration allows you to control if the plugin should somewhat ensure
-     * that such properties are more accurate. More accurate means that the plugin will perform a
-     * {@code git fetch} before the properties are calculated.
-     * Certainly a {@code git fetch} is an operation that may alter your local git repository
-     * and thus the plugin will operate not perform such operation (offline is set to {@code true}).
-     * If you however desire more accurate properties you may want to set this to {@code false}.
-     */
-    public abstract Property<Boolean> getOffline();
-
-    @Inject
-    public ProjectLayout getProjectLayout() {
-        throw new IllegalStateException("Should have been injected!");
-    }
-
-    /**
      * Setup the default values / conventions for the GitCommitIdPluginExtension.
      */
     @Inject
@@ -301,27 +172,16 @@ public abstract class GitCommitIdPluginExtension {
         // injectAllReactorProjects
         getVerbose().convention(false);
         // skipPoms
-        getDotGitDirectory().convention(
-            getProjectLayout().getProjectDirectory().dir(".git"));
-        getGitDescribeConfig().convention(new GitDescribeConfig());
-        getAbbrevLength().convention(7);
         getPropertyPrefix().convention("git");
         getExportDateFormat().convention("yyyy-MM-dd'T'HH:mm:ssZ");
         getExportDateFormatTimeZone().convention(TimeZone.getDefault().getID());
-        getFailOnNoGitDirectory().convention(true);
-        getFailOnUnableToExtractRepoInfo().convention(true);
-        getUseNativeGit().convention(false);
         getSkip().convention(false);
-
         getExcludeProperties().convention(Collections.emptyList());
         getIncludeOnlyProperties().convention(Collections.emptyList());
         // commitIdGenerationMode
         // replacementProperties
-        getEvaluateOnCommit().convention("HEAD");
-        getNativeGitTimeoutInMs().convention(30000L);
         getUseBranchNameFromBuildEnvironment().convention(true);
         // injectIntoSysProperties
-        getOffline().convention(true);
         // projectBuildOutputTimestamp
     }
 }
