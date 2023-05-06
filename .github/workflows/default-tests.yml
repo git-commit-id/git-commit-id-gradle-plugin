@@ -61,7 +61,7 @@ jobs:
           java-version: ${{ matrix.java_version }}
           java-package: jdk
       - name: Install a test version with Gradle
-        run: ./gradlew clean publishToMavenLocal
+        run: ./gradlew clean publishAllPublicationsToLocalPluginRepositoryRepository
       - uses: actions/checkout@v3
         with:
           submodules: recursive
