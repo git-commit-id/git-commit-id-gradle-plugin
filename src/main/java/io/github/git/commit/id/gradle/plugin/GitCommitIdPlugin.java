@@ -72,9 +72,9 @@ public class GitCommitIdPlugin implements Plugin<Project> {
      */
     public void apply(Project project) {
         var extension = project.getExtensions().create(
-                GIT_COMMIT_ID_EXTENSION_NAME, GitCommitIdPluginExtension.class, project);
+                GIT_COMMIT_ID_EXTENSION_NAME, GitCommitIdPluginExtension.class);
         var task = project.getTasks().create(
                 GIT_COMMIT_ID_TASK_NAME, GitCommitIdPluginGenerationTask.class);
-        task.onlyIf(ignore -> extension.skip.get() == false);
+        task.onlyIf(ignore -> extension.getSkip().get() == false);
     }
 }

@@ -72,7 +72,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     public DirectoryProperty getInput() {
-        return getExtension().dotGitDirectory;
+        return getExtension().getDotGitDirectory();
     }
 
     /**
@@ -85,7 +85,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      */
     @OutputFile
     public RegularFileProperty getOutput() {
-        return getExtension().generateGitPropertiesFilename;
+        return getExtension().getGenerateGitPropertiesFilename();
     }
 
     /**
@@ -95,7 +95,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
     @TaskAction
     public void runTheTask() {
         GitCommitIdPluginExtension extension = getExtension();
-        boolean verbose = extension.verbose.get();
+        boolean verbose = extension.getVerbose().get();
         final LogInterface log = new LogInterface() {
             @Override
             public void debug(String msg) {
@@ -153,30 +153,30 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Nonnull
             @Override
             public String getDateFormat() {
-                return extension.exportDateFormat.get();
+                return extension.getExportDateFormat().get();
             }
 
             @Nonnull
             @Override
             public String getDateFormatTimeZone() {
-                return extension.exportDateFormatTimeZone.get();
+                return extension.getExportDateFormatTimeZone().get();
             }
 
             @Nonnull
             @Override
             public String getPrefixDot() {
-                String trimmedPrefix = extension.propertyPrefix.get().trim();
+                String trimmedPrefix = extension.getPropertyPrefix().get().trim();
                 return trimmedPrefix.equals("") ? "" : trimmedPrefix + ".";
             }
 
             @Override
             public List<String> getExcludeProperties() {
-                return extension.excludeProperties.get();
+                return extension.getExcludeProperties().get();
             }
 
             @Override
             public List<String> getIncludeOnlyProperties() {
-                return extension.includeOnlyProperties.get();
+                return extension.getIncludeOnlyProperties().get();
             }
 
             @Nullable
@@ -188,22 +188,22 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean useNativeGit() {
-                return extension.useNativeGit.get();
+                return extension.getUseNativeGit().get();
             }
 
             @Override
             public long getNativeGitTimeoutInMs() {
-                return extension.nativeGitTimeoutInMs.get();
+                return extension.getNativeGitTimeoutInMs().get();
             }
 
             @Override
             public int getAbbrevLength() {
-                return extension.abbrevLength.get();
+                return extension.getAbbrevLength().get();
             }
 
             @Override
             public GitDescribeConfig getGitDescribe() {
-                return extension.gitDescribeConfig.get();
+                return extension.getGitDescribeConfig().get();
             }
 
             @Override
@@ -213,28 +213,27 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean getUseBranchNameFromBuildEnvironment() {
-                return extension.useBranchNameFromBuildEnvironment.get();
+                return extension.getUseBranchNameFromBuildEnvironment().get();
             }
 
             @Override
             public boolean isOffline() {
-                return extension.offline.get();
+                return extension.getOffline().get();
             }
 
             @Override
             public String getEvaluateOnCommit() {
-                // TODO: validate commit string!!!
-                return extension.evaluateOnCommit.get();
+                return extension.getEvaluateOnCommit().get();
             }
 
             @Override
             public File getDotGitDirectory() {
-                return extension.dotGitDirectory.get().getAsFile();
+                return extension.getDotGitDirectory().get().getAsFile();
             }
 
             @Override
             public boolean shouldGenerateGitPropertiesFile() {
-                return extension.generateGitPropertiesFile.get();
+                return extension.getGenerateGitPropertiesFile().get();
             }
 
             @Override
@@ -249,7 +248,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public CommitIdPropertiesOutputFormat getPropertiesOutputFormat() {
-                return extension.generateGitPropertiesFormat.get();
+                return extension.getGenerateGitPropertiesFormat().get();
             }
 
             @Override
@@ -271,7 +270,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public File getGenerateGitPropertiesFile() {
-                return extension.generateGitPropertiesFilename.get().getAsFile();
+                return extension.getGenerateGitPropertiesFilename().get().getAsFile();
             }
 
             @Override
@@ -289,7 +288,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean shouldPropertiesEscapeUnicode() {
-                return extension.generateGitPropertiesFileWithEscapedUnicode.get();
+                return extension.getGenerateGitPropertiesFileWithEscapedUnicode().get();
             }
         };
 
