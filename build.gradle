@@ -15,7 +15,9 @@ project.gradle.taskGraph.whenReady {
 
         // Skip signing when we publish to local
         tasks.withType(Sign) {
-            enabled = false
+            onlyIf {
+                false
+            }
         }
     } else {
         version = "0.0.1-beta"
