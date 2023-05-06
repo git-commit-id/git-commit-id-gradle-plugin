@@ -109,7 +109,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      *
      * <p>Defaults to {@code true}, so a missing {@code .git} directory may cause a build failure.
      */
-    public abstract Property<Boolean> getFailOnNoGitDirectory();
+    public abstract Property<Boolean> getShouldFailOnNoGitDirectory();
 
     /**
      * Control whether the plugin should fail the build if it's unable to
@@ -117,7 +117,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      *
      * <p>Defaults to {@code true}, so missing data may cause a build failure.
      */
-    public abstract Property<Boolean> getFailOnUnableToExtractRepoInfo();
+    public abstract Property<Boolean> getShouldFailOnUnableToExtractRepoInfo();
 
     /**
      * This plugin ships with custom {@code jgit} implementation that is being used to obtain all
@@ -133,7 +133,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      * <p>To not get your build stuck forever, this plugin also has an option to configure a
      * maximum timeout to wait for any native command. Refer to {@link #getNativeGitTimeoutInMs()}.
      */
-    public abstract Property<Boolean> getUseNativeGit();
+    public abstract Property<Boolean> getShouldUseNativeGit();
 
 
     /**
@@ -159,7 +159,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      * about the repository with the native Git executable does not terminate.
      *
      * <p>Note: This option will only be taken into consideration when using the native git
-     * executable ({@link #getUseNativeGit()} is set to {@code true}).
+     * executable ({@link #getShouldUseNativeGit()} is set to {@code true}).
      *
      * <p>By default this timeout is set to 30000 (30 seconds).
      */
@@ -180,8 +180,13 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      * Certainly a {@code git fetch} is an operation that may alter your local git repository
      * and thus the plugin will operate not perform such operation (offline is set to {@code true}).
      * If you however desire more accurate properties you may want to set this to {@code false}.
+     *
+     * <p>When enabled the "up-to-date" checking might not work correctly anymore.
+     * A git fetch might update the state of the dotGitDir and since this
+     * is used as input might cause gradle to think that something
+     * in git has changed that warrants a new execution of the plugin.
      */
-    public abstract Property<Boolean> getOffline();
+    public abstract Property<Boolean> getShouldStayOffline();
 
     @Inject
     public ProjectLayout getProjectLayout() {
@@ -197,11 +202,11 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
             getProjectLayout().getProjectDirectory().dir(".git"));
         getGitDescribeConfig().convention(new GitDescribeConfig());
         getAbbrevLength().convention(7);
-        getFailOnNoGitDirectory().convention(true);
-        getFailOnUnableToExtractRepoInfo().convention(true);
-        getUseNativeGit().convention(false);
+        getShouldFailOnNoGitDirectory().convention(true);
+        getShouldFailOnUnableToExtractRepoInfo().convention(true);
+        getShouldUseNativeGit().convention(false);
         getEvaluateOnCommit().convention("HEAD");
         getNativeGitTimeoutInMs().convention(30000L);
-        getOffline().convention(true);
+        getShouldStayOffline().convention(true);
     }
 }

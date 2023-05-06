@@ -205,7 +205,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean useNativeGit() {
-                return getGitCommitIdPluginGitSettingsExtension().getUseNativeGit().get();
+                return getGitCommitIdPluginGitSettingsExtension().getShouldUseNativeGit().get();
             }
 
             @Override
@@ -235,7 +235,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean isOffline() {
-                return getGitCommitIdPluginGitSettingsExtension().getOffline().get();
+                return getGitCommitIdPluginGitSettingsExtension().getShouldStayOffline().get();
             }
 
             @Override
