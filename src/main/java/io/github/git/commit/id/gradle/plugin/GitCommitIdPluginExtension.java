@@ -22,10 +22,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.ProjectLayout;
-import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
-import pl.project13.core.CommitIdPropertiesOutputFormat;
 import pl.project13.core.git.GitDescribeConfig;
 
 /**
@@ -52,6 +50,17 @@ import pl.project13.core.git.GitDescribeConfig;
  * </pre>
  */
 public abstract class GitCommitIdPluginExtension {
+    /**
+     * Name of the extension how it's made available to the end-user as
+     * DSL like configuration in the {@code build.gradle}:
+     * <pre>
+     * gitCommitId {
+     *     skip.set(false)
+     * }
+     * </pre>.
+     */
+    public static final String NAME = "gitCommitId";
+
     /**
      * Configuration option to enable or disable more verbose information during the
      * execution of the plugin.

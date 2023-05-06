@@ -20,7 +20,6 @@ package io.github.git.commit.id.gradle.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.ExtensionAware;
-import pl.project13.core.CommitIdPropertiesOutputFormat;
 
 /**
  * The GitCommitIdPlugin or also known as git-commit-id-gradle-plugin is a plugin
@@ -64,9 +63,6 @@ import pl.project13.core.CommitIdPropertiesOutputFormat;
  * to {@link GitCommitIdPluginGenerationTask}.
  */
 public class GitCommitIdPlugin implements Plugin<Project> {
-    public static final String GIT_COMMIT_ID_EXTENSION_NAME = "gitCommitId";
-    public static final String GIT_COMMIT_ID_TASK_NAME = "gitCommitIdGenerationTask";
-
     /**
      * Apply this plugin to the given target project.
      *
@@ -74,11 +70,14 @@ public class GitCommitIdPlugin implements Plugin<Project> {
      */
     public void apply(Project project) {
         var extension = project.getExtensions().create(
-                GIT_COMMIT_ID_EXTENSION_NAME, GitCommitIdPluginExtension.class);
+            GitCommitIdPluginExtension.NAME,
+            GitCommitIdPluginExtension.class);
         ((ExtensionAware) extension).getExtensions().create(
-            "outputSettings", GitCommitIdPluginOutputSettingsExtension.class);
+            GitCommitIdPluginOutputSettingsExtension.NAME,
+            GitCommitIdPluginOutputSettingsExtension.class);
         var task = project.getTasks().create(
-                GIT_COMMIT_ID_TASK_NAME, GitCommitIdPluginGenerationTask.class);
+            GitCommitIdPluginGenerationTask.NAME,
+            GitCommitIdPluginGenerationTask.class);
         task.onlyIf(ignore -> extension.getSkip().get() == false);
     }
 }

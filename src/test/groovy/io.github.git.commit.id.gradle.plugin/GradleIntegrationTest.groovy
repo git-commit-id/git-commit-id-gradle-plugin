@@ -12,14 +12,14 @@ class GradleIntegrationTest extends AbstractGradleTest {
     private GradleRunner createRunner(projectDir) {
         GradleRunner.create()
                 .withPluginClasspath()
-                .withArguments(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}", "--stacktrace", "--debug")
+                .withArguments(":${GitCommitIdPluginGenerationTask.NAME}", "--stacktrace", "--debug")
                 .withProjectDir(projectDir)
     }
 
     private void assertTaskOutcome(BuildResult result, TaskOutcome expectedTaskOutcome) {
         Assertions.assertEquals(
                 expectedTaskOutcome,
-                result.task(":${GitCommitIdPlugin.GIT_COMMIT_ID_TASK_NAME}")?.outcome,
+                result.task(":${GitCommitIdPluginGenerationTask.NAME}")?.outcome,
                 result.output
         )
     }
@@ -33,7 +33,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
         new File(projectDir, "build.gradle").withWriterAppend("UTF-8") {
             it.write(
                     """
-                    ${GitCommitIdPlugin.GIT_COMMIT_ID_EXTENSION_NAME} {
+                    ${GitCommitIdPluginExtension.NAME} {
                         skip.set($shouldSkip)
                     }
                     """.stripIndent()
@@ -89,9 +89,9 @@ class GradleIntegrationTest extends AbstractGradleTest {
         new File(projectDir, "build.gradle").withWriterAppend("UTF-8") {
             it.write(
                     """
-                    ${GitCommitIdPlugin.GIT_COMMIT_ID_EXTENSION_NAME} {
+                    ${GitCommitIdPluginExtension.NAME} {
                         outputSettings {
-                            generateGitPropertiesFile.set(true)
+                            shouldGenerateOutputFile.set(true)
                         }
                     }
                     """.stripIndent()

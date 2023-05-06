@@ -54,6 +54,12 @@ import pl.project13.core.util.BuildFileChangeListener;
 @CacheableTask
 public class GitCommitIdPluginGenerationTask extends DefaultTask {
     /**
+     * Name of the task how it's made available to the end-user's
+     * task execution graph.
+     */
+    public static final String NAME = "gitCommitIdGenerationTask";
+
+    /**
      * The {@link GitCommitIdPluginExtension} that serves as configuration of the plugin / task.
      *
      * @return The {@link GitCommitIdPluginExtension}

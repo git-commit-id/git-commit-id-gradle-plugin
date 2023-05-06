@@ -43,6 +43,20 @@ import pl.project13.core.CommitIdPropertiesOutputFormat;
  * {@link GitCommitIdPluginGenerationTask}.
  */
 public abstract class GitCommitIdPluginOutputSettingsExtension {
+    /**
+     * Name of the extension how it's made available to the end-user as
+     * DSL like configuration in the {@code build.gradle}:
+     * <pre>
+     * gitCommitId {
+     *     outputSettings {
+     *         shouldGenerateOutputFile.set(true)
+     *     }
+     * }
+     * </pre>
+     * As may notice this extension is made available as "nested" extension
+     * of the {@link GitCommitIdPluginExtension}.
+     */
+    public static final String NAME = "outputSettings";
 
     /**
      * Configuration option to enable or disable the generation of an output file.
@@ -85,7 +99,8 @@ public abstract class GitCommitIdPluginOutputSettingsExtension {
      * If you so desire and wish for unicode escaping (e.g. \\u6E2C\\u8A66\\u4E2D\\u6587) you
      * can set this to {@code true}.
      *
-     * <p>Only applies if the {@link #getOutputFormat()} is instructed to generate a "properties" file</p>
+     * <p>Only applies if the {@link #getOutputFormat()} is instructed
+     * to generate a "properties" file</p>
      */
     public abstract Property<Boolean> getShouldEscapedUnicodeForPropertiesOutput();
 
