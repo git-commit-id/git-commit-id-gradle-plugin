@@ -149,5 +149,3 @@ jobs:
           ./gradlew clean build --rerun-tasks
       - name: Validate if the testversion has produced the desired output
         run: /bin/bash -c '[[ -f "${{env.TEMP_DIR}}"/build/git.properties ]] && cat "${{env.TEMP_DIR}}"/build/git.properties || exit 1;'
-      - name: Cleanup TEMP_DIR
-        run: rm -rf "${{env.TEMP_DIR}}"
