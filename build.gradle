@@ -10,16 +10,15 @@ plugins {
 group = "io.github.git-commit-id"
 
 project.gradle.taskGraph.whenReady {
-    def baseVersion = "0.0.1-alpha"
     if (gradle.taskGraph.hasTask(":publishAllPublicationsToLocalPluginRepositoryRepository")) {
-        version = "${baseVersion}-SNAPSHOT"
+        version = "0.0.1-alpha"
 
         // Skip signing when we publish to local
         tasks.withType(Sign) {
             enabled = false
         }
     } else {
-        version = baseVersion
+        version = "0.0.1-beta"
     }
 }
 
