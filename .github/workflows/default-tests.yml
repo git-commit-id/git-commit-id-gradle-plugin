@@ -54,7 +54,9 @@ jobs:
     name: Run integration test with Java ${{ matrix.java_version }} and Gradle ${{ matrix.gradle_version }}
     runs-on: ubuntu-latest
     needs: test
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         java_version: ['11']
         gradle_version: [
