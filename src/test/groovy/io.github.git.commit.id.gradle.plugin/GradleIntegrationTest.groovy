@@ -90,7 +90,9 @@ class GradleIntegrationTest extends AbstractGradleTest {
             it.write(
                     """
                     ${GitCommitIdPlugin.GIT_COMMIT_ID_EXTENSION_NAME} {
-                        generateGitPropertiesFile.set(true)
+                        outputSettings {
+                            generateGitPropertiesFile.set(true)
+                        }
                     }
                     """.stripIndent()
             )

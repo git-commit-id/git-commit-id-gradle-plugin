@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputFile;
@@ -61,6 +62,11 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
         return getProject().getExtensions().findByType(GitCommitIdPluginExtension.class);
     }
 
+    private GitCommitIdPluginOutputSettingsExtension getGitCommitIdPluginOutputSettingsExtension() {
+        return ((ExtensionAware) getExtension()).getExtensions()
+            .findByType(GitCommitIdPluginOutputSettingsExtension.class);
+    }
+
     /**
      * Since we are generating "git" information this task needs to specify the git-directory
      * as input. The input can then be used by gradle to determine if the task is "up-to-date"
@@ -85,7 +91,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      */
     @OutputFile
     public RegularFileProperty getOutput() {
-        return getExtension().getGenerateGitPropertiesFilename();
+        return getGitCommitIdPluginOutputSettingsExtension().getGenerateGitPropertiesFilename();
     }
 
     /**
@@ -233,7 +239,8 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean shouldGenerateGitPropertiesFile() {
-                return extension.getGenerateGitPropertiesFile().get();
+                return getGitCommitIdPluginOutputSettingsExtension()
+                    .getGenerateGitPropertiesFile().get();
             }
 
             @Override
@@ -248,7 +255,9 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public CommitIdPropertiesOutputFormat getPropertiesOutputFormat() {
-                return extension.getGenerateGitPropertiesFormat().get();
+                return getGitCommitIdPluginOutputSettingsExtension()
+                    .getGenerateGitPropertiesFormat()
+                    .get();
             }
 
             @Override
@@ -270,7 +279,9 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public File getGenerateGitPropertiesFile() {
-                return extension.getGenerateGitPropertiesFilename().get().getAsFile();
+                return getGitCommitIdPluginOutputSettingsExtension()
+                    .getGenerateGitPropertiesFilename()
+                    .get().getAsFile();
             }
 
             @Override
@@ -288,7 +299,8 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean shouldPropertiesEscapeUnicode() {
-                return extension.getGenerateGitPropertiesFileWithEscapedUnicode().get();
+                return getGitCommitIdPluginOutputSettingsExtension()
+                    .getGenerateGitPropertiesFileWithEscapedUnicode().get();
             }
         };
 
