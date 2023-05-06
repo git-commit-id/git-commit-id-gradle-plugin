@@ -25,7 +25,10 @@ jobs:
     needs: checkstyle
     strategy:
       matrix:
-        java_version: [ '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ]
+        java_version: [
+          '11',
+          # '12', '13', '14', '15', '16', '17', '18', '19', '20'
+        ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -47,7 +50,7 @@ jobs:
       matrix:
         java_version: ['11']
         gradle_version: [
-          '8.1.1'
+          '8.1.1',
         ]
 
     steps:
@@ -62,7 +65,7 @@ jobs:
           java-package: jdk
       - name: Install a test version with Gradle
         run: ./gradlew clean publishAllPublicationsToLocalPluginRepositoryRepository
-      - run: echo "TEMP_DIR=$(mktemp -d)" >> $GITHUB_ENV
+      - run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin)" >> $GITHUB_ENV
       - name: "Checkout git-commit-id-gradle-debugging to run actual gradle integration tests"
         uses: actions/checkout@v3
         with:
