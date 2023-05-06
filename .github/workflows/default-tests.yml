@@ -72,20 +72,20 @@ jobs:
         with:
           submodules: recursive
           repository: git-commit-id/git-commit-id-gradle-debugging
-          path: ${{ env.TEMP_DIR}}
+          path: ${{env.TEMP_DIR}}
       - name: Setup Gradle ${{ matrix.gradle_version }}
         run: |
-            cd ${{ env.TEMP_DIR}}
-            ./gradle wrapper --gradle-version ${{ matrix.gradle_version }} --distribution-type bin
+            cd "${{env.TEMP_DIR}}"
+            ./gradlew wrapper --gradle-version ${{ matrix.gradle_version }} --distribution-type bin
       - name: Verify Setup of Gradle ${{ matrix.gradle_version }}
         run: |
-          cd ${{ env.TEMP_DIR}}
+          cd "${{env.TEMP_DIR}}"
           ./gradlew -version
       - name: Run the local testversion with Gradle
         run: |
-          cd ${{ env.TEMP_DIR}}
+          cd "${{env.TEMP_DIR}}"
           ./gradlew clean build --rerun-tasks
       - name: Validate if the testversion has produced the desired output
-        run: /bin/bash -c '[[ -f ${{ env.TEMP_DIR}}/build/git.properties ]] && cat ${{ env.TEMP_DIR}}/build/git.properties || exit 1;'
+        run: /bin/bash -c '[[ -f "${{env.TEMP_DIR}}"/build/git.properties ]] && cat "${{env.TEMP_DIR}}"/build/git.properties || exit 1;'
       - name: Cleanup TEMP_DIR
-        run: rm -rf ${{ env.TEMP_DIR}}
+        run: rm -rf "${{env.TEMP_DIR}}"
