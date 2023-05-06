@@ -8,7 +8,6 @@ For those who don't know the plugin, it basically helps you with the following t
 Getting the plugin
 ==================
 The plugin **unreleased**!
-Future version might be released to Maven Central ([see here](https://search.maven.org/artifact/io.github.git-commit-id/git-commit-id-gradle-plugin)), so you don't have to configure any additional repositories to use this plugin.
 
 Using the plugin
 ==================
@@ -58,14 +57,20 @@ The current version is **unreleased**
 
 Plugin compatibility with Gradle
 -----------------------------
-This project requires at least 11 java and will rely on gradle's convention for configuration
+This project requires *at least java 11* and will rely on gradle's convention for configuration.
+You also will need *at least a gradle 5.3** installation to be able to use this plugin.
 
-With [Gradle's Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html) the
-minimum supported gradle version is 5.0.
-Unfortunately conventions only had been introduced with [gradle 5.1](https://docs.gradle.org/5.1/release-notes.html)
-so that is as of now the minimal supported version.
-
-**TODO** test this assumption and make a pretty table
+In case you are interested here are more details about the specifics for the version requirements:
+- The [git-commit-id-plugin-core](https://github.com/git-commit-id/git-commit-id-plugin-core)
+  which provides the core functions for gathering the git information relies on [JGit](https://wiki.eclipse.org/JGit)
+  that is a pure Java library implementing the Git version control file access routines.
+  With version [6.0](https://wiki.eclipse.org/JGit/New_and_Noteworthy/6.0) this library requires Java 11 to run.
+- With [Gradle's Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html) the
+  minimum supported gradle version is 5.0.
+- This plugin relies on conventions that had been introduced as part of the [Lazy Configuration](https://docs.gradle.org/current/userguide/lazy_configuration.html).
+  Such conventions had been made available with [gradle 5.1](https://docs.gradle.org/5.1/release-notes.html)
+- The GitCommitIdPluginExtension is made abstract and uses an `Injection` annotation that only
+  works with gradle 5.3 and onwards. For more details refer to https://github.com/gradle/gradle/issues/24947.
 
 
 Maintainers
