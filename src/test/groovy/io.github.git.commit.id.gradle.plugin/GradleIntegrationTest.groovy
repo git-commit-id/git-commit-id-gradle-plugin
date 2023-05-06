@@ -68,8 +68,8 @@ class GradleIntegrationTest extends AbstractGradleTest {
         new File(projectDir, "README.md") << """
             Hello World!
         """.stripIndent()
-        runGit(projectDir, ["add", "README.md"], [])
-        runGit(projectDir, ["commit", "-m", "added readme"])
+        runGitAdd(projectDir, "README.md")
+        runGitCommit(projectDir, "added readme")
 
         and: "the plugin get's executed again"
         result = runner.build()

@@ -36,10 +36,6 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java_version }}
           java-package: jdk
-      - name: Set a dummy git username / usermail, since we create commits on the fly
-        run: |
-          git config --global user.email "github.git-commit-id.git-commit-id-gradle-plugin@example.com"
-          git config --global user.name "Github Actions for https://github.com/git-commit-id/git-commit-id-gradle-plugin"
       - name: Build with Gradle
         run: ./gradlew clean build
 
@@ -64,10 +60,6 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java_version }}
           java-package: jdk
-      - name: Set a dummy git username / usermail, since we create commits on the fly
-        run: |
-          git config --global user.email "github.git-commit-id.git-commit-id-gradle-plugin@example.com"
-          git config --global user.name "Github Actions for https://github.com/git-commit-id/git-commit-id-gradle-plugin"
       - name: Install a test version with Gradle
         run: ./gradlew clean publishToMavenLocal
       - uses: actions/checkout@v3

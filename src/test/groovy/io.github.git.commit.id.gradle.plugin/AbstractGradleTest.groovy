@@ -1,8 +1,9 @@
 package io.github.git.commit.id.gradle.plugin
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.io.CleanupMode;
-import org.junit.jupiter.api.io.TempDir;
+import org.eclipse.jgit.api.Git
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.io.CleanupMode
+import org.junit.jupiter.api.io.TempDir
 
 class AbstractGradleTest {
     // @TempDir(cleanup = CleanupMode.ON_SUCCESS)  // For debugging
@@ -21,24 +22,29 @@ class AbstractGradleTest {
         """.stripIndent()
 
         // and: "it's initialized as git project"
-        runGit(projectDir, ["init"], [])
-        runGit(projectDir, ["add", "*"], [])
-        runGit(projectDir, ["commit", "-m", "initialize dummy project"])
+        runGitInitAddAndCommit(projectDir)
     }
 
-    protected boolean runGit(projectDir, gitCommands, extraGitArgs=["--no-signoff", "--no-gpg-sign"]) {
-        def command = [
-            "git", "-C", projectDir, *gitCommands
-        ]
-        if (extraGitArgs) {
-            command.addAll(*extraGitArgs)
+    protected void runGitInitAddAndCommit(File projectDir) {
+        try (final Git git = Git.init().setDirectory(projectDir).call()) {
+            // nothing
         }
+        runGitAdd(projectDir)
+        runGitCommit(projectDir)
+    }
 
-        def p = command.execute()
-        def exitCode = p.waitFor()
-        if (exitCode != 0) {
-            def error = new String(p.errorStream.readAllBytes())
-            throw new RuntimeException("Running '$command' failed with '$exitCode'. Error:\n$error")
+    protected void runGitAdd(File projectDir, String filePattern = "*") {
+        try (final Git git = Git.open(projectDir)) {
+            git.add().addFilepattern(filePattern).call()
+        }
+    }
+
+    protected void runGitCommit(File projectDir, String message = "dummy commit") {
+        try (final Git git = Git.open(projectDir)) {
+            git.commit()
+                    .setAuthor("JUnitTest", "example@example.com")
+                    .setMessage(message)
+                    .call()
         }
     }
 }
