@@ -12,6 +12,11 @@ group = "io.github.git-commit-id"
 project.gradle.taskGraph.whenReady {
     if (gradle.taskGraph.hasTask(":publishAllPublicationsToLocalPluginRepositoryRepository")) {
         version = "0.0.1-alpha"
+
+        // Skip signing when we publish to local
+        tasks.withType(Sign) {
+            enabled = false
+        }
     } else {
         version = "0.0.1-beta"
     }
@@ -91,10 +96,6 @@ checkstyle {
 }
 
 signing {
-    // Skip signing when we publish to local
-    required {
-        !gradle.taskGraph.hasTask(":publishAllPublicationsToLocalPluginRepositoryRepository")
-    }
     // By default the Signing Plugin uses a Java-based implementation of PGP for signing.
     // This implementation cannot use the gpg-agent program for managing private keys, though.
     // If you want to use the gpg-agent, you can change the signatory implementation used by the Signing Plugin:
