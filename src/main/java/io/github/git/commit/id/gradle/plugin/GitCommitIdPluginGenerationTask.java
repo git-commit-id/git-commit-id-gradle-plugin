@@ -64,12 +64,12 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      *
      * @return The {@link GitCommitIdPluginExtension}
      */
-    private GitCommitIdPluginExtension getExtension() {
+    private GitCommitIdPluginExtension getGitCommitIdPluginExtension() {
         return getProject().getExtensions().findByType(GitCommitIdPluginExtension.class);
     }
 
     private GitCommitIdPluginOutputSettingsExtension getGitCommitIdPluginOutputSettingsExtension() {
-        return ((ExtensionAware) getExtension()).getExtensions()
+        return ((ExtensionAware) getGitCommitIdPluginExtension()).getExtensions()
             .findByType(GitCommitIdPluginOutputSettingsExtension.class);
     }
 
@@ -84,7 +84,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     public DirectoryProperty getInput() {
-        return getExtension().getDotGitDirectory();
+        return getGitCommitIdPluginExtension().getDotGitDirectory();
     }
 
     /**
@@ -106,7 +106,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      */
     @TaskAction
     public void runTheTask() {
-        GitCommitIdPluginExtension extension = getExtension();
+        GitCommitIdPluginExtension extension = getGitCommitIdPluginExtension();
         boolean verbose = extension.getVerbose().get();
         final LogInterface log = new LogInterface() {
             @Override
