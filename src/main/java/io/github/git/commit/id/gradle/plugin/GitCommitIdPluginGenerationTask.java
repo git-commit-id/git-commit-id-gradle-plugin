@@ -27,9 +27,7 @@ import java.util.Properties;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import org.gradle.api.DefaultTask;
-import org.gradle.api.Project;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.CacheableTask;
@@ -54,17 +52,6 @@ import pl.project13.core.util.BuildFileChangeListener;
  */
 @CacheableTask
 public class GitCommitIdPluginGenerationTask extends DefaultTask {
-    /**
-     * The project for which the task is running, or for which we want to generate
-     * "git" information.
-     *
-     * @return The project
-     */
-    @Inject
-    public Project getProject() {
-        throw new IllegalStateException();
-    }
-
     /**
      * The {@link GitCommitIdPluginExtension} that serves as configuration of the plugin / task.
      *
