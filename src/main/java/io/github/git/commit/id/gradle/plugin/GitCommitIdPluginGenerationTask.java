@@ -91,7 +91,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      */
     @OutputFile
     public RegularFileProperty getOutput() {
-        return getGitCommitIdPluginOutputSettingsExtension().getGenerateGitPropertiesFilename();
+        return getGitCommitIdPluginOutputSettingsExtension().getOutputFile();
     }
 
     /**
@@ -240,7 +240,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Override
             public boolean shouldGenerateGitPropertiesFile() {
                 return getGitCommitIdPluginOutputSettingsExtension()
-                    .getGenerateGitPropertiesFile().get();
+                    .getShouldGenerateOutputFile().get();
             }
 
             @Override
@@ -256,7 +256,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Override
             public CommitIdPropertiesOutputFormat getPropertiesOutputFormat() {
                 return getGitCommitIdPluginOutputSettingsExtension()
-                    .getGenerateGitPropertiesFormat()
+                    .getOutputFormat()
                     .get();
             }
 
@@ -280,7 +280,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Override
             public File getGenerateGitPropertiesFile() {
                 return getGitCommitIdPluginOutputSettingsExtension()
-                    .getGenerateGitPropertiesFilename()
+                    .getOutputFile()
                     .get().getAsFile();
             }
 
@@ -300,7 +300,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Override
             public boolean shouldPropertiesEscapeUnicode() {
                 return getGitCommitIdPluginOutputSettingsExtension()
-                    .getGenerateGitPropertiesFileWithEscapedUnicode().get();
+                    .getShouldEscapedUnicodeForPropertiesOutput().get();
             }
         };
 
