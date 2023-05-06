@@ -66,7 +66,7 @@ jobs:
       - name: Install a test version with Gradle
         run: ./gradlew clean publishAllPublicationsToLocalPluginRepositoryRepository
       - name: Setup TEMP_DIR
-        run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin/git-commit-id-gradle-debugging)" >> $GITHUB_ENV
+        run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin git-commit-id-gradle-debugging.XXXXXXXXXX)" >> $GITHUB_ENV
       - name: Checkout git-commit-id-gradle-debugging to run actual gradle integration tests
         uses: actions/checkout@v3
         with:
