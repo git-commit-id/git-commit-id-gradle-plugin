@@ -72,16 +72,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract Property<Boolean> getSkip();
 
     /**
-     * When set to {@code true} this plugin will try to use the branch name from build environment.
-     * Set to {@code false} to use JGit/GIT to get current branch name which can be useful
-     * when using the JGitflow maven plugin. I'm not sure if there are similar plugins for gradle
-     * where this needs to set to {@code false}.
-     *
-     * <p>By default this is set to {@code true}.
-     */
-    public abstract Property<Boolean> getUseBranchNameFromBuildEnvironment();
-
-    /**
      * Setup the default values / conventions for the GitCommitIdPluginExtension.
      */
     @Inject
@@ -92,7 +82,6 @@ public abstract class GitCommitIdPluginExtension {
         getSkip().convention(false);
         // commitIdGenerationMode
         // replacementProperties
-        getUseBranchNameFromBuildEnvironment().convention(true);
         // injectIntoSysProperties
         // projectBuildOutputTimestamp
     }

@@ -193,6 +193,16 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      */
     public abstract Property<Boolean> getShouldStayOffline();
 
+    /**
+     * When set to {@code true} this plugin will try to use the branch name from build environment.
+     * Set to {@code false} to use JGit/GIT to get current branch name which can be useful
+     * when using the JGitflow maven plugin. I'm not sure if there are similar plugins for gradle
+     * where this needs to set to {@code false}.
+     *
+     * <p>By default this is set to {@code true}.
+     */
+    public abstract Property<Boolean> getUseBranchNameFromBuildEnvironment();
+
     @Inject
     public ProjectLayout getProjectLayout() {
         throw new IllegalStateException("Should have been injected!");
@@ -213,5 +223,6 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
         getEvaluateOnCommit().convention("HEAD");
         getNativeGitTimeoutInMs().convention(30000L);
         getShouldStayOffline().convention(true);
+        getUseBranchNameFromBuildEnvironment().convention(true);
     }
 }

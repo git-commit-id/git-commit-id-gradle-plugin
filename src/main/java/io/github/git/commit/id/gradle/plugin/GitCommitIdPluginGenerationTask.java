@@ -245,7 +245,8 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean getUseBranchNameFromBuildEnvironment() {
-                return extension.getUseBranchNameFromBuildEnvironment().get();
+                return getGitCommitIdPluginGitSettingsExtension()
+                    .getUseBranchNameFromBuildEnvironment().get();
             }
 
             @Override
