@@ -83,6 +83,11 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             .findByType(GitCommitIdPluginFormatSettingsExtension.class);
     }
 
+    private GitCommitIdPluginFilterSettingsExtension getGitCommitIdPluginFilterSettingsExtension() {
+        return ((ExtensionAware) getGitCommitIdPluginExtension()).getExtensions()
+            .findByType(GitCommitIdPluginFilterSettingsExtension.class);
+    }
+
     /**
      * Since we are generating "git" information this task needs to specify the git-directory
      * as input. The input can then be used by gradle to determine if the task is "up-to-date"
@@ -196,12 +201,14 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public List<String> getExcludeProperties() {
-                return extension.getExcludeProperties().get();
+                return getGitCommitIdPluginFilterSettingsExtension()
+                    .getExcludeProperties().get();
             }
 
             @Override
             public List<String> getIncludeOnlyProperties() {
-                return extension.getIncludeOnlyProperties().get();
+                return getGitCommitIdPluginFilterSettingsExtension()
+                    .getIncludeOnlyProperties().get();
             }
 
             @Nullable

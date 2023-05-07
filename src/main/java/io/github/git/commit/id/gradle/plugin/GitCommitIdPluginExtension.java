@@ -17,9 +17,7 @@
 
 package io.github.git.commit.id.gradle.plugin;
 
-import java.util.Collections;
 import javax.inject.Inject;
-import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 
 /**
@@ -74,47 +72,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract Property<Boolean> getSkip();
 
     /**
-     * Can be used to exclude certain properties from being emitted (e.g. filter out properties
-     * that you *don't* want to expose). May be useful when you want to hide
-     * {@code git.build.user.email} (maybe because you don't want to expose your eMail?),
-     * or the email of the committer?
-     *
-     * <p>Each value may be globbing, that is, you can write {@code git.commit.user.*} to
-     * exclude both the {@code name}, as well as {@code email} properties from being emitted.
-     *
-     * <p>Please note that the strings here are Java regexes ({@code .*} is globbing,
-     * not plain {@code *}).
-     * If you have a very long list of exclusions you may want to
-     * use {@link #getIncludeOnlyProperties()}.
-     *
-     * <p>Defaults to the empty list (= no properties are excluded).
-     */
-    public abstract ListProperty<String> getExcludeProperties();
-
-    /**
-     * Can be used to include only certain properties into the emission (e.g. include only
-     * properties that you <b>want</b> to expose). This feature was implemented to avoid big exclude
-     * properties tag when we only want very few specific properties.
-     *
-     * <p>The inclusion rules, will be overruled by the {@link #getExcludeProperties()} rules
-     * (e.g. you can write an inclusion rule that applies for multiple
-     * properties and then exclude a subset of them).
-     * You can therefor can be a bit broader in the inclusion rules and
-     * exclude more sensitive ones  in the {@link #getExcludeProperties()} rules.
-     *
-     * <p>Each value may be globbing, that is, you can write {@code git.commit.user.*} to
-     * exclude both the {@code name}, as well as {@code email} properties from being emitted.
-     *
-     * <p>Please note that the strings here are Java regexes ({@code .*} is globbing,
-     * not plain {@code *}).
-     * If you have a short list of exclusions you may want to
-     * use {@link #getExcludeProperties()}.
-     *
-     * <p>Defaults to the empty list (= no properties are excluded).
-     */
-    public abstract ListProperty<String> getIncludeOnlyProperties();
-
-    /**
      * When set to {@code true} this plugin will try to use the branch name from build environment.
      * Set to {@code false} to use JGit/GIT to get current branch name which can be useful
      * when using the JGitflow maven plugin. I'm not sure if there are similar plugins for gradle
@@ -133,8 +90,6 @@ public abstract class GitCommitIdPluginExtension {
         getVerbose().convention(false);
         // skipPoms
         getSkip().convention(false);
-        getExcludeProperties().convention(Collections.emptyList());
-        getIncludeOnlyProperties().convention(Collections.emptyList());
         // commitIdGenerationMode
         // replacementProperties
         getUseBranchNameFromBuildEnvironment().convention(true);

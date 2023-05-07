@@ -84,7 +84,8 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      *
      * <p>Refer to {@link GitDescribeConfig} for options that can be passed towards git-describe.
      * The result of this configuration is exposed as
-     * {@link GitCommitIdPluginFormatSettingsExtension#getPropertyPrefix()}{@code .commit.id.describe}.
+     * {@link GitCommitIdPluginFormatSettingsExtension#getPropertyPrefix()}
+     * {@code .commit.id.describe}.
      */
     public abstract Property<GitDescribeConfig> getGitDescribeConfig();
 
