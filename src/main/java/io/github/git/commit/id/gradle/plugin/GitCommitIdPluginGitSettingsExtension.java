@@ -201,7 +201,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      *
      * <p>By default this is set to {@code true}.
      */
-    public abstract Property<Boolean> getUseBranchNameFromBuildEnvironment();
+    public abstract Property<Boolean> getShouldUseBranchNameFromBuildEnvironment();
 
     @Inject
     public ProjectLayout getProjectLayout() {
@@ -223,6 +223,6 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
         getEvaluateOnCommit().convention("HEAD");
         getNativeGitTimeoutInMs().convention(30000L);
         getShouldStayOffline().convention(true);
-        getUseBranchNameFromBuildEnvironment().convention(true);
+        getShouldUseBranchNameFromBuildEnvironment().convention(true);
     }
 }
