@@ -48,8 +48,12 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      * DSL like configuration in the {@code build.gradle}:
      * <pre>
      * gitCommitId {
-     *     outputSettings {
-     *         shouldGenerateOutputFile.set(true)
+     *     gitSettings {
+     *         dotGitDirectory.set(
+     *             project.getObjects().directoryProperty().set(
+     *                 project.getLayout().getProjectDirectory().dir(".git")
+     *             )
+     *         )
      *     }
      * }
      * </pre>
@@ -80,7 +84,7 @@ public abstract class GitCommitIdPluginGitSettingsExtension {
      *
      * <p>Refer to {@link GitDescribeConfig} for options that can be passed towards git-describe.
      * The result of this configuration is exposed as
-     * {@link GitCommitIdPluginExtension#getPropertyPrefix()}{@code .commit.id.describe}.
+     * {@link GitCommitIdPluginFormatSettingsExtension#getPropertyPrefix()}{@code .commit.id.describe}.
      */
     public abstract Property<GitDescribeConfig> getGitDescribeConfig();
 

@@ -48,8 +48,8 @@ public abstract class GitCommitIdPluginFormatSettingsExtension {
      * DSL like configuration in the {@code build.gradle}:
      * <pre>
      * gitCommitId {
-     *     outputSettings {
-     *         shouldGenerateOutputFile.set(true)
+     *     formatSettings {
+     *         propertyPrefix.set("git")
      *     }
      * }
      * </pre>

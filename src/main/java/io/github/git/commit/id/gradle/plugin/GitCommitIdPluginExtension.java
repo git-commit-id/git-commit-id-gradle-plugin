@@ -18,13 +18,9 @@
 package io.github.git.commit.id.gradle.plugin;
 
 import java.util.Collections;
-import java.util.TimeZone;
 import javax.inject.Inject;
-import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
-import pl.project13.core.git.GitDescribeConfig;
 
 /**
  * The {@link GitCommitIdPlugin} comes with a sensible set of default configurations and settings.
