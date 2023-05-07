@@ -176,14 +176,14 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Override
             public String getDateFormat() {
                 return getGitCommitIdPluginFormatSettingsExtension()
-                    .getExportDateFormat().get();
+                    .getDateFormat().get();
             }
 
             @Nonnull
             @Override
             public String getDateFormatTimeZone() {
                 return getGitCommitIdPluginFormatSettingsExtension()
-                    .getExportDateFormatTimeZone().get();
+                    .getDateFormatTimeZone().get();
             }
 
             @Nonnull

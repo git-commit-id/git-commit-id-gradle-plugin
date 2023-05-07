@@ -79,12 +79,12 @@ public abstract class GitCommitIdPluginFormatSettingsExtension {
      *
      * <p>Defaults to {@code yyyy-MM-dd'T'HH:mm:ssZ}
      *
-     * <p>Refer to {@link #getExportDateFormatTimeZone()} if you want to change the time-zone.
+     * <p>Refer to {@link #getDateFormatTimeZone()} if you want to change the time-zone.
      */
-    public abstract Property<String> getExportDateFormat();
+    public abstract Property<String> getDateFormat();
 
     /**
-     * Allows to configure the time zone which is utilized for {@link #getExportDateFormat()}.
+     * Allows to configure the time zone which is utilized for {@link #getDateFormat()}.
      *
      * <p>Defaults to {@code java.util.TimeZone.getDefault().getID()}.
      * Allows various formats of timezone configuration
@@ -92,7 +92,7 @@ public abstract class GitCommitIdPluginFormatSettingsExtension {
      * As a general warning try to avoid three-letter time zone IDs because the same
      * abbreviation are often used for multiple time zones.
      */
-    public abstract Property<String> getExportDateFormatTimeZone();
+    public abstract Property<String> getDateFormatTimeZone();
 
     @Inject
     public ProjectLayout getProjectLayout() {
@@ -105,7 +105,7 @@ public abstract class GitCommitIdPluginFormatSettingsExtension {
     @Inject
     public GitCommitIdPluginFormatSettingsExtension() {
         getPropertyPrefix().convention("git");
-        getExportDateFormat().convention("yyyy-MM-dd'T'HH:mm:ssZ");
-        getExportDateFormatTimeZone().convention(TimeZone.getDefault().getID());
+        getDateFormat().convention("yyyy-MM-dd'T'HH:mm:ssZ");
+        getDateFormatTimeZone().convention(TimeZone.getDefault().getID());
     }
 }
