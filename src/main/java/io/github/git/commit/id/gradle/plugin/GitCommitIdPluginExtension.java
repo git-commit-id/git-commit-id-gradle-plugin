@@ -70,42 +70,6 @@ public abstract class GitCommitIdPluginExtension {
     public abstract Property<Boolean> getVerbose();
 
     /**
-     * This configuration allows you to configure the "prefix" of the generated properties and thus
-     * will be used as the "namespace" prefix for all exposed/generated properties.
-     *
-     * <p>An example the plugin may generate the property {@code ${configured-prefix}.commit.id}.
-     * Such behaviour can be used to generate properties for multiple git repositories.
-     *
-     * <p>Refer to {@link pl.project13.core.GitCommitPropertyConstant} for all properties
-     * that can be generated. The configured prefix would need to be added in front.
-     *
-     * <p>Defaults to {@code git} which then results in {@code git.commit.id} and
-     * similar generated properties.
-     */
-    public abstract Property<String> getPropertyPrefix();
-
-    /**
-     * Allows to configure the date format in which "time" properties should be converted into.
-     * For example the commit time, or the author time would be converted into the specified format.
-     *
-     * <p>Defaults to {@code yyyy-MM-dd'T'HH:mm:ssZ}
-     *
-     * <p>Refer to {@link #getExportDateFormatTimeZone()} if you want to change the time-zone.
-     */
-    public abstract Property<String> getExportDateFormat();
-
-    /**
-     * Allows to configure the time zone which is utilized for {@link #getExportDateFormat()}.
-     *
-     * <p>Defaults to {@code java.util.TimeZone.getDefault().getID()}.
-     * Allows various formats of timezone configuration
-     * (e.g. 'America/Los_Angeles', 'GMT+10', 'PST').
-     * As a general warning try to avoid three-letter time zone IDs because the same
-     * abbreviation are often used for multiple time zones.
-     */
-    public abstract Property<String> getExportDateFormatTimeZone();
-
-    /**
      * Allows to configure to skip the execution of the {@link GitCommitIdPluginGenerationTask}
      * that will generate the information you have requested from this plugin.
      *
@@ -172,9 +136,6 @@ public abstract class GitCommitIdPluginExtension {
         // injectAllReactorProjects
         getVerbose().convention(false);
         // skipPoms
-        getPropertyPrefix().convention("git");
-        getExportDateFormat().convention("yyyy-MM-dd'T'HH:mm:ssZ");
-        getExportDateFormatTimeZone().convention(TimeZone.getDefault().getID());
         getSkip().convention(false);
         getExcludeProperties().convention(Collections.emptyList());
         getIncludeOnlyProperties().convention(Collections.emptyList());

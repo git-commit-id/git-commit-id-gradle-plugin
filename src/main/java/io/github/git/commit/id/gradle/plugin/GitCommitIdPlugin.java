@@ -69,15 +69,23 @@ public class GitCommitIdPlugin implements Plugin<Project> {
      * @param project The target project
      */
     public void apply(Project project) {
+        // gitCommitId
         var extension = project.getExtensions().create(
             GitCommitIdPluginExtension.NAME,
             GitCommitIdPluginExtension.class);
+        // gitCommitId -> outputSettings
         ((ExtensionAware) extension).getExtensions().create(
             GitCommitIdPluginOutputSettingsExtension.NAME,
             GitCommitIdPluginOutputSettingsExtension.class);
+        // gitCommitId -> gitSettings
         ((ExtensionAware) extension).getExtensions().create(
             GitCommitIdPluginGitSettingsExtension.NAME,
             GitCommitIdPluginGitSettingsExtension.class);
+        // gitCommitId -> formatSettings
+        ((ExtensionAware) extension).getExtensions().create(
+            GitCommitIdPluginFormatSettingsExtension.NAME,
+            GitCommitIdPluginFormatSettingsExtension.class);
+        // Task
         var task = project.getTasks().create(
             GitCommitIdPluginGenerationTask.NAME,
             GitCommitIdPluginGenerationTask.class);

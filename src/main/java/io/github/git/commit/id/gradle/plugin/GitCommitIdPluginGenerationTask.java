@@ -78,6 +78,11 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             .findByType(GitCommitIdPluginGitSettingsExtension.class);
     }
 
+    private GitCommitIdPluginFormatSettingsExtension getGitCommitIdPluginFormatSettingsExtension() {
+        return ((ExtensionAware) getGitCommitIdPluginExtension()).getExtensions()
+            .findByType(GitCommitIdPluginFormatSettingsExtension.class);
+    }
+
     /**
      * Since we are generating "git" information this task needs to specify the git-directory
      * as input. The input can then be used by gradle to determine if the task is "up-to-date"
@@ -170,19 +175,22 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
             @Nonnull
             @Override
             public String getDateFormat() {
-                return extension.getExportDateFormat().get();
+                return getGitCommitIdPluginFormatSettingsExtension()
+                    .getExportDateFormat().get();
             }
 
             @Nonnull
             @Override
             public String getDateFormatTimeZone() {
-                return extension.getExportDateFormatTimeZone().get();
+                return getGitCommitIdPluginFormatSettingsExtension()
+                    .getExportDateFormatTimeZone().get();
             }
 
             @Nonnull
             @Override
             public String getPrefixDot() {
-                String trimmedPrefix = extension.getPropertyPrefix().get().trim();
+                String trimmedPrefix = getGitCommitIdPluginFormatSettingsExtension()
+                    .getPropertyPrefix().get().trim();
                 return trimmedPrefix.equals("") ? "" : trimmedPrefix + ".";
             }
 
