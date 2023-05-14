@@ -81,19 +81,6 @@ class GradleIntegrationTest extends AbstractGradleTest {
         // https://docs.gradle.org/current/userguide/build_cache.html#sec:build_cache_enable
         new File(projectDir, "gradle.properties") << "org.gradle.caching=true"
 
-        and: "we produce a git properties file"
-        new File(projectDir, "build.gradle").withWriterAppend("UTF-8") {
-            it.write(
-                    """
-                    ${GitCommitIdPluginExtension.NAME} {
-                        outputSettings {
-                            shouldGenerateOutputFile.set(true)
-                        }
-                    }
-                    """.stripIndent()
-            )
-        }
-
         when: "running the plugin"
         def runner = createRunner(projectDir)
 

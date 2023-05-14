@@ -92,9 +92,8 @@ public class GitCommitIdPlugin implements Plugin<Project> {
         private Properties getProps() {
             try {
                 final Properties p = GenericFileManager.readPropertiesAsUtf8(
-                    // task.getGitCommitIdPluginOutputSettingsExtension().getOutputFormat().get(),
-                    CommitIdPropertiesOutputFormat.PROPERTIES,
-                    task.getInternalOutput().getAsFile()
+                    task.getGitCommitIdPluginOutputSettingsExtension().getOutputFormat().get(),
+                    task.getOutput().getAsFile().get()
                 );
                 return p;
             } catch (GitCommitIdExecutionException e) {

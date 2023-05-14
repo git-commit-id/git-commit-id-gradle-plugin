@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.file.RegularFile;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.tasks.CacheableTask;
@@ -46,7 +45,6 @@ import pl.project13.core.GitCommitIdPlugin;
 import pl.project13.core.git.GitDescribeConfig;
 import pl.project13.core.log.LogInterface;
 import pl.project13.core.util.BuildFileChangeListener;
-import pl.project13.core.util.GenericFileManager;
 
 /**
  * The task that generates the "git" information.
@@ -123,11 +121,6 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
     @OutputFile
     public RegularFileProperty getOutput() {
         return getGitCommitIdPluginOutputSettingsExtension().getOutputFile();
-    }
-
-    @OutputFile
-    public RegularFile getInternalOutput() {
-        return getProject().getLayout().getBuildDirectory().file("internal_git.properties").get();
     }
 
     /**
@@ -287,8 +280,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean shouldGenerateGitPropertiesFile() {
-                return getGitCommitIdPluginOutputSettingsExtension()
-                  .getShouldGenerateOutputFile().get();
+                return true;
             }
 
             @Override
@@ -355,17 +347,6 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
         try {
             Properties properties = new Properties();
             pl.project13.core.GitCommitIdPlugin.runPlugin(cb, properties);
-
-            GenericFileManager.dumpProperties(
-                null,
-                CommitIdPropertiesOutputFormat.PROPERTIES,
-                getInternalOutput().getAsFile(),
-                StandardCharsets.UTF_8,
-                false,
-                null,
-                properties
-            );
-
             // When we want to use it as TaskInput or something,
             // it should be convert to a hashmap, excluding build_time
             /*
