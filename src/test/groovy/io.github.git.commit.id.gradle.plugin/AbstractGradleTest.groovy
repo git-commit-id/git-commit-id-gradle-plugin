@@ -1,6 +1,9 @@
 package io.github.git.commit.id.gradle.plugin
 
 import org.eclipse.jgit.api.Git
+import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.CleanupMode
 import org.junit.jupiter.api.io.TempDir
@@ -39,12 +42,51 @@ class AbstractGradleTest {
         }
     }
 
-    protected void runGitCommit(File projectDir, String message = "dummy commit") {
+    protected String runGitCommit(File projectDir, String message = "dummy commit") {
         try (final Git git = Git.open(projectDir)) {
-            git.commit()
+            return git.commit()
                     .setAuthor("JUnitTest", "example@example.com")
                     .setMessage(message)
                     .call()
+                    .name()
         }
     }
+
+    protected String getAbbrevCommit(File projectDir) {
+        try (final Git git = Git.open(projectDir)) {
+            var log = git.log().setMaxCount(1).call()[0]
+            return log.abbreviate(7).name()
+        }
+    }
+
+    protected void assertTaskOutcome(
+            BuildResult result,
+            TaskOutcome expectedTaskOutcome,
+            String taskName=":${GitCommitIdPluginGenerationTask.NAME}") {
+        Assertions.assertEquals(
+                expectedTaskOutcome,
+                result.task(taskName)?.outcome,
+                result.output
+        )
+    }
+
+    protected void assertPluginExecuted(BuildResult result) {
+        assertTaskOutcome(result, TaskOutcome.SUCCESS)
+        Assertions.assertTrue(
+                result.output.contains(GitCommitIdPluginGenerationTask.PLUGIN_EXECUTION_MESSAGE),
+                result.output
+        )
+    }
+
+    protected void assertPluginSkipped(BuildResult result) {
+        assertTaskOutcome(result, TaskOutcome.UP_TO_DATE)
+        /*
+        // TODO: Why is the execution message printed, while the task claims to be up-to-date???
+        Assertions.assertFalse(
+                result.output.contains(GitCommitIdPluginGenerationTask.PLUGIN_EXECUTION_MESSAGE),
+                result.output
+        )
+         */
+    }
+
 }

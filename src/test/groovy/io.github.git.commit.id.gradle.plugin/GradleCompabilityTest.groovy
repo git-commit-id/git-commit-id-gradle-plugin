@@ -1,8 +1,6 @@
 package io.github.git.commit.id.gradle.plugin
 
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -16,6 +14,10 @@ class GradleCompabilityTest extends AbstractGradleTest {
         given: "a dummy project"
         def projectDir = temporaryFolder
 
+        // and: "caching is enabled"
+        // https://docs.gradle.org/current/userguide/build_cache.html#sec:build_cache_enable
+        // new File(projectDir, "gradle.properties") << "org.gradle.caching=true"
+
         when: "running the plugin"
         def runner = GradleRunner.create()
                 .withGradleVersion(gradleVersion)
@@ -23,21 +25,13 @@ class GradleCompabilityTest extends AbstractGradleTest {
                 .withArguments(*extraExecutionArgs, "--stacktrace", "--debug")
                 .withProjectDir(projectDir)
 
-        then: "the execution should be successfull"
+        then: "the execution should run the plugin"
         def result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.SUCCESS,
-                result.task(":${GitCommitIdPluginGenerationTask.NAME}")?.outcome,
-                result.output
-        )
+        assertPluginExecuted(result)
 
-        and: "running it again should yield an up-to-date"
+        and: "running it again should not run the plugin again"
         result = runner.build()
-        Assertions.assertEquals(
-                TaskOutcome.UP_TO_DATE,
-                result.task(":${GitCommitIdPluginGenerationTask.NAME}")?.outcome,
-                result.output
-        )
+        assertPluginSkipped(result)
     }
 
     private static Stream<Arguments> getGradleTestParams() {

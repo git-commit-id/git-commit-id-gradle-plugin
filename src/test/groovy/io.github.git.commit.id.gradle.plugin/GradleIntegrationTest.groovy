@@ -1,6 +1,5 @@
 package io.github.git.commit.id.gradle.plugin
 
-import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions
@@ -9,19 +8,16 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class GradleIntegrationTest extends AbstractGradleTest {
-    private GradleRunner createRunner(projectDir) {
+    private GradleRunner createRunner(
+            File projectDir,
+            List<String> extraArgs=Collections.emptyList()) {
         GradleRunner.create()
                 .withPluginClasspath()
-                .withArguments(":${GitCommitIdPluginGenerationTask.NAME}", "--stacktrace", "--debug")
+                .withArguments(
+                        ":${GitCommitIdPluginGenerationTask.NAME}", "--stacktrace", "--debug",
+                        *extraArgs
+                )
                 .withProjectDir(projectDir)
-    }
-
-    private void assertTaskOutcome(BuildResult result, TaskOutcome expectedTaskOutcome) {
-        Assertions.assertEquals(
-                expectedTaskOutcome,
-                result.task(":${GitCommitIdPluginGenerationTask.NAME}")?.outcome,
-                result.output
-        )
     }
 
     @ParameterizedTest
@@ -56,13 +52,13 @@ class GradleIntegrationTest extends AbstractGradleTest {
         when: "running the plugin"
         def runner = createRunner(projectDir)
 
-        then: "the execution should be successfull"
+        then: "the execution should run the plugin"
         def result = runner.build()
-        assertTaskOutcome(result, TaskOutcome.SUCCESS)
+        assertPluginExecuted(result)
 
-        and: "running it again should yield an up-to-date"
+        and: "running it again should not run the plugin again"
         result = runner.build()
-        assertTaskOutcome(result, TaskOutcome.UP_TO_DATE)
+        assertPluginSkipped(result)
 
         when: "we add a commit to git"
         new File(projectDir, "README.md") << """
@@ -73,7 +69,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
 
         and: "the plugin get's executed again"
         result = runner.build()
-        assertTaskOutcome(result, TaskOutcome.SUCCESS)
+        assertPluginExecuted(result)
     }
 
     @Test
@@ -101,9 +97,9 @@ class GradleIntegrationTest extends AbstractGradleTest {
         when: "running the plugin"
         def runner = createRunner(projectDir)
 
-        then: "the execution should be successfull"
+        then: "the execution should run the plugin"
         def result = runner.build()
-        assertTaskOutcome(result, TaskOutcome.SUCCESS)
+        assertPluginExecuted(result)
 
         and: "output exists"
         def expectedGenerated = projectDir.toPath().resolve("build/git.properties").toFile()
@@ -122,5 +118,57 @@ class GradleIntegrationTest extends AbstractGradleTest {
         and:
         def newlyGeneratedLines = expectedGenerated.readLines()
         Assertions.assertEquals(originalLines, newlyGeneratedLines)
+    }
+
+    @Test
+    void propertiesAreExposedToProject() {
+        given: "a dummy project"
+        def projectDir = temporaryFolder
+        def marker = "==============MARKER=============="
+
+        // and: "caching is enabled"
+        // https://docs.gradle.org/current/userguide/build_cache.html#sec:build_cache_enable
+        // new File(projectDir, "gradle.properties") << "org.gradle.caching=true"
+
+        and: "we have a dummy task that consumes the generated properties"
+        new File(projectDir, "build.gradle").withWriterAppend("UTF-8") {
+            it.write(
+                    """
+                    task printPropTask(type: DefaultTask) {
+                        outputs.upToDateWhen { false }
+                        doLast {
+                            // println("${marker}1: \${project?.ext?.gitProperties}${marker}")
+                            // println("${marker}2: \${project?.ext?.gitProperties.get('git.commit.id.full')}${marker}")
+                            // println("${marker}3: \${project?.ext?.gitProperties.get('git.commit.id.abbrev', 'EMPTY')}${marker}")
+                            // println("${marker}4: \${project?.ext?.gitProperties()}${marker}")
+                            // println("${marker}5: \${project?.ext?.gitProperties('git.commit.id.full')}${marker}")
+                            // println("${marker}6: \${project?.ext?.gitProperties('git.commit.id.abbrev')}${marker}")
+                            // println("${marker}7: \${project?.ext?.gitProperties['git.commit.id.full']}${marker}")
+                            println("${marker}\${project?.ext?.gitProperties['git.commit.id.abbrev']}${marker}")
+                        }
+                    }
+                    """.stripIndent()
+            )
+        }
+
+        when: "running the plugin"
+        def runner = createRunner(projectDir, [":printPropTask"])
+
+        then: "the execution should run the plugin"
+        def result = runner.build()
+        assertPluginExecuted(result)
+
+        and: "the output contains the abbrivated commit from the repository"
+        def expectedAbbrevCommit = getAbbrevCommit(projectDir)
+        def markerLine = result.output.readLines().find {it.contains(marker)}
+        Assertions.assertTrue(markerLine.contains("${marker}${expectedAbbrevCommit}${marker}"), markerLine)
+
+        and: "running it again should not run the plugin again"
+        result = runner.build()
+        assertPluginSkipped(result)
+
+        and: "the output contains the abbrivated commit from the repository"
+        markerLine = result.output.readLines().find {it.contains(marker)}
+        Assertions.assertTrue(markerLine.contains("${marker}${expectedAbbrevCommit}${marker}"), markerLine)
     }
 }
