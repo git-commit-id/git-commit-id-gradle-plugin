@@ -136,6 +136,7 @@ class GradleIntegrationTest extends AbstractGradleTest {
                     """
                     task printPropTask(type: DefaultTask) {
                         outputs.upToDateWhen { false }
+                        // dependsOn (tasks.gitCommitIdGenerationTask)
                         doLast {
                             // println("${marker}1: \${project?.ext?.gitProperties}${marker}")
                             // println("${marker}2: \${project?.ext?.gitProperties.get('git.commit.id.full')}${marker}")

@@ -17,9 +17,15 @@
 
 package io.github.git.commit.id.gradle.plugin;
 
+import groovy.lang.Closure;
+import java.util.Map;
+import java.util.Properties;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.ExtensionAware;
+import pl.project13.core.CommitIdPropertiesOutputFormat;
+import pl.project13.core.GitCommitIdExecutionException;
+import pl.project13.core.util.GenericFileManager;
 
 /**
  * The GitCommitIdPlugin or also known as git-commit-id-gradle-plugin is a plugin
@@ -63,6 +69,69 @@ import org.gradle.api.plugins.ExtensionAware;
  * to {@link GitCommitIdPluginGenerationTask}.
  */
 public class GitCommitIdPlugin implements Plugin<Project> {
+    private static final class PropertyExposingClosure extends Closure<String> {
+        private final GitCommitIdPluginGenerationTask task;
+
+        public PropertyExposingClosure(Object owner, GitCommitIdPluginGenerationTask task) {
+            super(owner, owner);
+            this.task = task;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder s = new StringBuilder();
+            for (Map.Entry<Object, Object> e : getProps().entrySet()) {
+                s.append(e.getValue());
+                s.append(":");
+                s.append(e.getKey());
+                s.append(",");
+            }
+            return s.toString();
+        }
+
+        private Properties getProps() {
+            try {
+                final Properties p = GenericFileManager.readPropertiesAsUtf8(
+                    // task.getGitCommitIdPluginOutputSettingsExtension().getOutputFormat().get(),
+                    CommitIdPropertiesOutputFormat.PROPERTIES,
+                    task.getInternalOutput().getAsFile()
+                );
+                return p;
+            } catch (GitCommitIdExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        public Object getProperty(String property) {
+            return getProps().get(property);
+        }
+
+        public String doCall() {
+            return toString();
+        }
+
+        public String doCall(Object obj) {
+            return toString();
+        }
+
+        public String doCall(String property) {
+            return (String) getProps().get(property);
+        }
+
+        // Do NOT IMPLEMENT!
+        // https://issues.apache.org/jira/browse/GROOVY-1665
+        // public String doCall(Object obj1, Object obj2) {
+        // }
+        public String get(String property) {
+            return (String) getProps().get(property);
+        }
+
+        public String get(String property, String defaultString) {
+            return (String) getProps().getOrDefault(property, defaultString);
+        }
+    }
+
     /**
      * Apply this plugin to the given target project.
      *
@@ -94,5 +163,10 @@ public class GitCommitIdPlugin implements Plugin<Project> {
             GitCommitIdPluginGenerationTask.NAME,
             GitCommitIdPluginGenerationTask.class);
         task.onlyIf(ignore -> extension.getSkip().get() == false);
+
+        project
+          .getExtensions()
+          .getExtraProperties()
+            .set("gitProperties", new PropertyExposingClosure(this, task));
     }
 }

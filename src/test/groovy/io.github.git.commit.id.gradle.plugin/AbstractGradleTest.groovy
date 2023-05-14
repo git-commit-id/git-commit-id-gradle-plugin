@@ -80,13 +80,10 @@ class AbstractGradleTest {
 
     protected void assertPluginSkipped(BuildResult result) {
         assertTaskOutcome(result, TaskOutcome.UP_TO_DATE)
-        /*
-        // TODO: Why is the execution message printed, while the task claims to be up-to-date???
         Assertions.assertFalse(
                 result.output.contains(GitCommitIdPluginGenerationTask.PLUGIN_EXECUTION_MESSAGE),
                 result.output
         )
-         */
     }
 
 }
