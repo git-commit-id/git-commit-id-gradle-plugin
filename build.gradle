@@ -32,7 +32,7 @@ ext {
 
 dependencies {
     implementation gradleApi()
-    implementation 'io.github.git-commit-id:git-commit-id-plugin-core:6.0.0-rc.4'
+    implementation 'io.github.git-commit-id:git-commit-id-plugin-core:6.0.0-rc.5'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.3'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
