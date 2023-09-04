@@ -7,7 +7,7 @@ jobs:
     name: Run checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up JDK 11
@@ -38,7 +38,7 @@ jobs:
           '20'
         ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up JDK ${{ matrix.java_version }}
@@ -125,7 +125,7 @@ jobs:
         ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up JDK ${{ matrix.java_version }}
@@ -139,7 +139,7 @@ jobs:
       - name: Setup TEMP_DIR
         run: echo "TEMP_DIR=$(mktemp -d --tmpdir=/home/runner/work/git-commit-id-gradle-plugin/git-commit-id-gradle-plugin git-commit-id-gradle-debugging.XXXXXXXXXX)" >> $GITHUB_ENV
       - name: Checkout git-commit-id-gradle-debugging to run actual gradle integration tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           repository: git-commit-id/git-commit-id-gradle-debugging
