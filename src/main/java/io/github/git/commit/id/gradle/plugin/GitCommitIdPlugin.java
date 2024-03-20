@@ -18,7 +18,6 @@
 package io.github.git.commit.id.gradle.plugin;
 
 import groovy.lang.Closure;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
@@ -26,10 +25,8 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.plugins.scala.ScalaPlugin;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
-import pl.project13.core.CommitIdPropertiesOutputFormat;
 import pl.project13.core.GitCommitIdExecutionException;
 import pl.project13.core.util.GenericFileManager;
 
@@ -172,10 +169,11 @@ public class GitCommitIdPlugin implements Plugin<Project> {
         // React to external plugins
         // See https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#reacting_to_plugins
         project.getTasks().named(JavaPlugin.CLASSES_TASK_NAME).configure(
-          classesTask -> classesTask.dependsOn(task));
+            classesTask -> classesTask.dependsOn(task));
 
         project.getPlugins().withType(JavaPlugin.class, javaPlugin -> {
-            SourceSetContainer sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
+            SourceSetContainer sourceSets =
+                project.getExtensions().getByType(SourceSetContainer.class);
             SourceSet main = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME);
             main.getJava().setSrcDirs(Arrays.asList(task.getOutput().getAsFile().get()));
         });
