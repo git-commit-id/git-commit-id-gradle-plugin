@@ -280,6 +280,10 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
 
             @Override
             public boolean shouldGenerateGitPropertiesFile() {
+                // This plugin currently relies on the fact that the
+                // output properties file was generated.
+                // Otherwise, the properties are not exposed as
+                // extra project properties via the PropertyExposingClosure.
                 return true;
             }
 

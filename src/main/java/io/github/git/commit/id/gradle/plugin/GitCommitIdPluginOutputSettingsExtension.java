@@ -68,6 +68,12 @@ public abstract class GitCommitIdPluginOutputSettingsExtension {
     // @OutputFile
     public abstract RegularFileProperty getOutputFile();
 
+    // This plugin currently relies on the fact that the
+    // output properties file was generated.
+    // Otherwise, the properties are not exposed as
+    // extra project properties via the PropertyExposingClosure.
+    // So the switch shouldGenerateOutputFile is intentionally missing!
+
     /**
      * Configuration option to enable or disable unicode escaping in the generated properties file.
      *
