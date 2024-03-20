@@ -342,6 +342,12 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
                 return getGitCommitIdPluginOutputSettingsExtension()
                   .getShouldEscapedUnicodeForPropertiesOutput().get();
             }
+
+            @Override
+            public boolean shouldFailOnNoGitDirectory() {
+                return getGitCommitIdPluginGitSettingsExtension()
+                  .getShouldFailOnNoGitDirectory().get();
+            }
         };
 
         try {
