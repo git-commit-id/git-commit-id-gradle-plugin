@@ -33,8 +33,8 @@ import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.tasks.CacheableTask;
 import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Internal;
-import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
@@ -118,7 +118,7 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
      *     The optional "properties" file that can be used to store the generated
      *     properties in a file.
      */
-    @OutputFile
+    @InputFile
     public RegularFileProperty getOutput() {
         return getGitCommitIdPluginOutputSettingsExtension().getOutputFile();
     }
