@@ -53,11 +53,17 @@ tasks.withType(Test) {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    options.release = ext.properties.jdkCompileVersion
 }
 
-sourceCompatibility = "${jdkCompileVersion}"
-targetCompatibility = "${jdkCompileVersion}"
+compileJava {
+    targetCompatibility = JavaVersion.toVersion("${jdkCompileVersion}")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("${jdkCompileVersion}")
+    targetCompatibility = JavaVersion.toVersion("${jdkCompileVersion}")
+}
+
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
