@@ -4,7 +4,7 @@ plugins {
     id 'signing'
     id 'idea'
     id 'checkstyle'
-    id("com.gradle.plugin-publish") version "1.2.1"
+    id("com.gradle.plugin-publish") version "1.2.2"
 }
 
 group = "io.github.git-commit-id"
