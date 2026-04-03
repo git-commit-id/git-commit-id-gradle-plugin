@@ -49,9 +49,9 @@ tasks.withType(Test) {
         languageVersion = JavaLanguageVersion.of(17)
     }
     testLogging {
-        exceptionFormat "full"
+        exceptionFormat = "full"
         events "started", "skipped", "passed", "failed"
-        showStandardStreams true
+        showStandardStreams = true
     }
 }
 
