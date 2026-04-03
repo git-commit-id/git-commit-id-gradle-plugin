@@ -45,6 +45,9 @@ dependencies {
 
 tasks.withType(Test) {
     useJUnitPlatform()
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
     testLogging {
         exceptionFormat "full"
         events "started", "skipped", "passed", "failed"
