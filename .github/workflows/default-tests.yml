@@ -54,7 +54,7 @@ jobs:
           java-version: ${{ matrix.java_version }}
           java-package: jdk
       - name: Downgrade gradle wrapper
-        run: ./gradle wrapper --gradle-version 8.14.4
+        run: ./gradlew wrapper --gradle-version 8.14.4
       - name: Build with Gradle
         run: ./gradlew clean build
 
