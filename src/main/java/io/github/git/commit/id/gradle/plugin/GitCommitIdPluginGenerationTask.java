@@ -352,6 +352,12 @@ public class GitCommitIdPluginGenerationTask extends DefaultTask {
                 return getGitCommitIdPluginGitSettingsExtension()
                   .getShouldFailOnNoGitDirectory().get();
             }
+
+            @Override
+            public boolean isPerModuleVersions() {
+                // TODO
+                return false;
+            }
         };
 
         try {
