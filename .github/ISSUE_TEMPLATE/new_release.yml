@@ -25,12 +25,12 @@ body:
               - [ ] verify that `~/.gradle/gradle.properties` exists
                     - contains gradle.publish.key, gradle.publish.secret from https://plugins.gradle.org/user/generate-key
               - [ ] Set release version: `bump2version patch --dry-run --verbose`
-              - [ ] Push changes and tag: `git push origin master --follow-tags`
+              - [ ] Push changes and tag: `git push origin main --follow-tags`
               - [ ] wait for github actions to pass
               - [ ] Publish to Gradle Plugin Portal: `./gradlew publishPlugins`
               - [ ] verify plugin is available on https://plugins.gradle.org/plugin/io.github.git-commit-id.git-commit-id-gradle-plugin (might take some time)
               - [ ] Set next development version: `bump2version patch --dry-run --verbose`
-              - [ ] Push snapshot version: `git push origin master`
+              - [ ] Push snapshot version: `git push origin main`
               - [ ] under [Milestones](https://github.com/git-commit-id/git-commit-id-gradle-plugin/milestones) close old milestone
               - [ ] under [Milestones](https://github.com/git-commit-id/git-commit-id-gradle-plugin/milestones) create new milestone for new version
               - [ ] under [Releases](https://github.com/git-commit-id/git-commit-id-gradle-plugin/releases) publish Release-Notes
