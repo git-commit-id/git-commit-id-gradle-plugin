@@ -1,0 +1,39 @@
+name: New release request
+description: Will be created by the author of the plugin, so not relevant for the public :-)
+labels: [ ]
+assignees: [ ]
+body:
+    - type: textarea
+      id: describe-the-release
+      attributes:
+          label: Describe the release details (required)
+          description: |
+              Just submit this as new issue...
+          value: |
+              This is the place holder to release the new **0.0.1** version.
+
+              Note that the current open tickets should be addressed, before performing a release.
+
+              # General scope of the new release:
+              Fixed some minor things, added some minor features...(full list https://github.com/git-commit-id/git-commit-id-gradle-plugin/issues?q=milestone%3A0.0.1).
+
+              # Release-Guide
+              see
+              - https://docs.gradle.org/current/userguide/publishing_gradle_plugins.html
+              - https://plugins.gradle.org/docs/publish-plugin
+
+              - [ ] verify that `~/.gradle/gradle.properties` exists
+                    - contains gradle.publish.key, gradle.publish.secret from https://plugins.gradle.org/user/generate-key
+              - [ ] Set release version: `bump2version patch --dry-run --verbose`
+              - [ ] Push changes and tag: `git push origin master --follow-tags`
+              - [ ] wait for github actions to pass
+              - [ ] Publish to Gradle Plugin Portal: `./gradlew publishPlugins`
+              - [ ] verify plugin is available on https://plugins.gradle.org/plugin/io.github.git-commit-id.git-commit-id-gradle-plugin (might take some time)
+              - [ ] Set next development version: `bump2version patch --dry-run --verbose`
+              - [ ] Push snapshot version: `git push origin master`
+              - [ ] under [Milestones](https://github.com/git-commit-id/git-commit-id-gradle-plugin/milestones) close old milestone
+              - [ ] under [Milestones](https://github.com/git-commit-id/git-commit-id-gradle-plugin/milestones) create new milestone for new version
+              - [ ] under [Releases](https://github.com/git-commit-id/git-commit-id-gradle-plugin/releases) publish Release-Notes
+              - [ ] update readme to point to the latest version available
+      validations:
+          required: true
