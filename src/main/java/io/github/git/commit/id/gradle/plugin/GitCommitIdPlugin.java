@@ -27,6 +27,7 @@ import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.TaskProvider;
 import pl.project13.core.GitCommitIdExecutionException;
 import pl.project13.core.util.GenericFileManager;
 
@@ -167,15 +168,15 @@ public class GitCommitIdPlugin implements Plugin<Project> {
             GitCommitIdPluginFilterSettingsExtension.NAME,
             GitCommitIdPluginFilterSettingsExtension.class);
         // Task
-        var task = project.getTasks().create(
+        TaskProvider<GitCommitIdPluginGenerationTask> taskProvider = project.getTasks().register(
             GitCommitIdPluginGenerationTask.NAME,
-            GitCommitIdPluginGenerationTask.class);
-        task.onlyIf(ignore -> extension.getSkip().get() == false);
+            GitCommitIdPluginGenerationTask.class,
+            task -> task.onlyIf(ignore -> extension.getSkip().get() == false));
 
         // React to external plugins
         // See https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#reacting_to_plugins
         project.getTasks().named(JavaPlugin.CLASSES_TASK_NAME).configure(
-            classesTask -> classesTask.dependsOn(task));
+            classesTask -> classesTask.dependsOn(taskProvider));
 
         project.getPlugins().withType(JavaPlugin.class, javaPlugin -> {
             SourceSetContainer sourceSets =
@@ -188,6 +189,6 @@ public class GitCommitIdPlugin implements Plugin<Project> {
         project
           .getExtensions()
           .getExtraProperties()
-            .set("gitProperties", new PropertyExposingClosure(this, task));
+            .set("gitProperties", new PropertyExposingClosure(this, taskProvider.get()));
     }
 }
