@@ -48,7 +48,7 @@ gitCommitId {
 }
 ```
 
-Refer to **TODO** for all the settings and in-depth explanations what the individual configurations are there for.
+Refer to [`GitCommitIdPluginExtension`](src/main/java/io/github/git/commit/id/gradle/plugin/GitCommitIdPluginExtension.java) for all available settings and in-depth explanations of what the individual configurations are there for.
 
 Versions
 --------
