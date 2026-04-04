@@ -179,10 +179,14 @@ public class GitCommitIdPlugin implements Plugin<Project> {
             classesTask -> classesTask.dependsOn(taskProvider));
 
         project.getPlugins().withType(JavaPlugin.class, javaPlugin -> {
-            SourceSetContainer sourceSets =
-                project.getExtensions().getByType(SourceSetContainer.class);
-            SourceSet main = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-            main.getJava().setSrcDirs(Arrays.asList(task.getOutput().getAsFile().get()));
+            // Configure processResources to include the generated git.properties
+            project.getTasks().named(JavaPlugin.PROCESS_RESOURCES_TASK_NAME).configure(
+                processResourcesTask -> {
+                    processResourcesTask.dependsOn(taskProvider);
+                    // Add the output directory as a source for resources
+                    processResourcesTask.getInputs().file(taskProvider.get().getOutput());
+                }
+            );
         });
 
         // Expose the generated properties
