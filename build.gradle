@@ -131,10 +131,19 @@ gradlePlugin {
     plugins {
         gitCommitIdPlugin {
             id = "${group}.${rootProject.name}"
-            displayName = "Plugin to make basic git repository information available in the gradle world."
-            description = "A plugin that helps you to extract valuable information from your git repository that can be included in your final artifact for reproducability."
-            tags.addAll("git", "gradle-plugin", "versioning")
+            displayName = "Git Commit ID Gradle Plugin"
+            description = "Capture comprehensive git repository metadata at build time -- commit ID, branch, tags, and more -- to embed in your artifacts for reproducibility and traceability."
+            tags.addAll("git", "version", "versioning", "commit", "build-info", "metadata", "reproducibility")
             implementationClass = 'io.github.git.commit.id.gradle.plugin.GitCommitIdPlugin'
+
+            // https://github.com/gradle/gradle-plugin-compatibility-plugin/blob/main/README.md
+            // requires publishing plugin v2.1.0+
+            compatibility {
+                features {
+                    // Declare the feature supported.
+                    configurationCache = true
+                }
+            }
         }
     }
     automatedPublishing = true
