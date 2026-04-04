@@ -73,6 +73,41 @@ public abstract class GitCommitIdPluginExtension {
 
     /**
      * Setup the default values / conventions for the GitCommitIdPluginExtension.
+     *
+     * <p>This extension provides basic configuration options. For more advanced settings,
+     * refer to the following nested extensions:
+     *
+     * <ul>
+     *   <li>{@link GitCommitIdPluginGitSettingsExtension} - Configure git repository settings:
+     *     <ul>
+     *       <li>.git directory location</li>
+     *       <li>git describe options</li>
+     *       <li>native git usage</li>
+     *       <li>abbrev length</li>
+     *       <li>offline mode</li>
+     *     </ul>
+     *   </li>
+     *   <li>{@link GitCommitIdPluginFormatSettingsExtension} - Configure property formatting:
+     *     <ul>
+     *       <li>property prefix</li>
+     *       <li>date format</li>
+     *       <li>timezone for generated properties</li>
+     *     </ul>
+     *   </li>
+     *   <li>{@link GitCommitIdPluginOutputSettingsExtension} - Configure output file generation:
+     *     <ul>
+     *       <li>output file location</li>
+     *       <li>format (JSON or properties)</li>
+     *       <li>unicode escaping</li>
+     *     </ul>
+     *   </li>
+     *   <li>{@link GitCommitIdPluginFilterSettingsExtension} - Configure property filtering:
+     *     <ul>
+     *       <li>include specific properties</li>
+     *       <li>exclude specific properties</li>
+     *     </ul>
+     *   </li>
+     * </ul>
      */
     @Inject
     public GitCommitIdPluginExtension() {
