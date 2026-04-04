@@ -147,9 +147,14 @@ jobs:
         run: |
           cd "${{env.TEMP_DIR}}"
           ./gradlew -version
+      - name: Extract plugin version for testing
+        id: plugin_version
+        run: |
+          PLUGIN_VERSION=$(grep 'def releaseVersion = ' build.gradle | sed 's/.*"\(.*\)".*/\1/')
+          echo "version=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
       - name: Run the local testversion with Gradle
         run: |
           cd "${{env.TEMP_DIR}}"
-          ./gradlew clean build --rerun-tasks
+          ./gradlew clean build --rerun-tasks -PpluginTestVersion=${{ steps.plugin_version.outputs.version }}
       - name: Validate if the testversion has produced the desired output
         run: /bin/bash -c '[[ -f "${{env.TEMP_DIR}}"/build/git.properties ]] && cat "${{env.TEMP_DIR}}"/build/git.properties || exit 1;'
