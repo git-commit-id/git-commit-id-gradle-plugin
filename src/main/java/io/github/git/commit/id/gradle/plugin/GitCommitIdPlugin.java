@@ -18,7 +18,7 @@
 package io.github.git.commit.id.gradle.plugin;
 
 import groovy.lang.Closure;
-import java.util.Arrays;
+import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 import org.gradle.api.Plugin;
@@ -94,9 +94,15 @@ public class GitCommitIdPlugin implements Plugin<Project> {
 
         private Properties getProps() {
             try {
+                File outputFile = task.getOutput().getAsFile().getOrNull();
+                if (outputFile == null || !outputFile.exists()) {
+                    // Return empty properties during configuration phase
+                    // when file hasn't been generated yet
+                    return new Properties();
+                }
                 final Properties p = GenericFileManager.readPropertiesAsUtf8(
                     task.getGitCommitIdPluginOutputSettingsExtension().getOutputFormat().get(),
-                    task.getOutput().getAsFile().get()
+                    outputFile
                 );
                 return p;
             } catch (GitCommitIdExecutionException e) {
